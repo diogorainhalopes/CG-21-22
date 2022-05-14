@@ -20,10 +20,27 @@ function createCamera() {
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    camera.position.x = 50;
-    camera.position.y = 50;
-    camera.position.z = 50;
+    camera.position.set(50, 50, 50);
     camera.lookAt(scene.position);
+}
+
+function defaultAngle() {
+    'use strict'
+    camera.position.set(50, 50, 50);
+    camera.lookAt(scene.position);
+}
+
+function topAngle() {
+    'use strict'
+    camera.position.set(50, 120, 0);
+    camera.lookAt(scene.position);
+}
+
+function lateralAngle() {
+    'use strict'
+    camera.position.set(0, 25, 50);
+    camera.lookAt(scene.position);
+    
 }
 
 function onResize() {
@@ -61,6 +78,15 @@ function onKeyDown(e) {
                 node.visible = !node.visible;
             }
         });
+        break;
+    case 49: //right arrow
+        defaultAngle();
+        break;
+    case 50: //up arrow
+        topAngle();
+        break;
+    case 51: //down arrow
+        lateralAngle();
         break;
     }
 }
