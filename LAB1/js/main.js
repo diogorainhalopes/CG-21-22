@@ -10,16 +10,14 @@ function createScene() {
     
     scene.add(new THREE.AxisHelper(10));
     
+    createCone(0, 0, 0);
     createTable(0, 8, 0);
     createBall(0, 0, 15);
 }
 
 function createCamera() {
     'use strict';
-    camera = new THREE.PerspectiveCamera(70,
-                                         window.innerWidth / window.innerHeight,
-                                         1,
-                                         1000);
+    camera = new THREE.OrthographicCamera( -100, 100, 100, -100, -100, 1000 );
     camera.position.set(50, 50, 50);
     camera.lookAt(scene.position);
 }
@@ -32,13 +30,13 @@ function defaultAngle() {
 
 function topAngle() {
     'use strict'
-    camera.position.set(50, 120, 0);
+    camera.position.set(0, 50, 0);
     camera.lookAt(scene.position);
 }
 
 function lateralAngle() {
     'use strict'
-    camera.position.set(0, 25, 50);
+    camera.position.set(0, 0, 50);
     camera.lookAt(scene.position);
     
 }
@@ -58,38 +56,54 @@ function onResize() {
 function onKeyDown(e) {
     'use strict';
     
-    switch (e.keyCode) {
-    case 65: //A
-    case 97: //a
-        scene.traverse(function (node) {
-            if (node instanceof THREE.Mesh) {
-                node.material.wireframe = !node.material.wireframe;
-            }
-        });
-        break;
-    case 83:  //S
-    case 115: //s
+    switch (e.key) {
+    
+    case 'S':  //S
+    case 's': //s
         ball.userData.jumping = !ball.userData.jumping;
         break;
-    case 69:  //E
-    case 101: //e
+    case 'E':  //E
+    case 'e': //e
         scene.traverse(function (node) {
             if (node instanceof THREE.AxisHelper) {
                 node.visible = !node.visible;
             }
         });
         break;
-    case 49: //right arrow
+    case '1': // 1
         defaultAngle();
         break;
-    case 50: //up arrow
+    case '2': // 2
         topAngle();
         break;
-    case 51: //down arrow
+    case '3': // 3
         lateralAngle();
+        break;
+    case '4': // 4
+        scene.traverse(function (node) {
+            if (node instanceof THREE.Mesh) {
+                node.material.wireframe = !node.material.wireframe;
+            }
+        });
+        break;
+    case 'q':
+        cone.rotateY(-0.1);
+        break;
+    case 'Q':
+        cone.rotateY(0.1);
+        break;
+    case 'z':
+        cone.rotateZ(0.1);
+        break;
+    case 'Z':
+        cone.rotateZ(0.1);
+        break;
+    case 'd':
+        table.rotateX(0.1);
         break;
     }
 }
+
 
 function render() {
     'use strict';
