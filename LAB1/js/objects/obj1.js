@@ -13,7 +13,7 @@ function addCone(obj, x, y, z, a, b, c) {
     obj.add(mesh);
 
 }
-function createCone(x, y, z) {
+function createObj1(x, y, z) {
     'use strict'
 
     cone = new THREE.Object3D();

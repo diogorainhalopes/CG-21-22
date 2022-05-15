@@ -10,7 +10,7 @@ function createScene() {
     
     scene.add(new THREE.AxisHelper(10));
     
-    createCone(0, 0, 0);
+    createObj1(0, 0, 0);
     createTable(0, 8, 0);
     createBall(0, 0, 15);
 }
