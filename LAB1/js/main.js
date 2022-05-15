@@ -11,6 +11,7 @@ function createScene() {
     scene.add(new THREE.AxisHelper(10));
     
     createObj1(0, 0, 0);
+    createObj3(0, 0, 0);
     createTable(0, 8, 0);
     createBall(0, 0, 15);
 }
