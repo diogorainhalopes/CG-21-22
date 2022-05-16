@@ -1,6 +1,11 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
+var aspectRatio;
+var viewSize = 150;
+const NUM = 2;
+const NEAR = 1;
+const FAR = 1000;
 
 function createScene() {
     'use strict';
@@ -17,10 +22,20 @@ function createScene() {
     // createBall(0, 0, 15);
 }
 
-function createCamera() {
+function createCamera(x,y,z) {
     'use strict';
-    camera = new THREE.OrthographicCamera( -100, 100, 100, -100, -100, 1000 );
-    camera.position.set(50, 50, 50);
+
+    aspectRatio = window.innerWidth / window.innerHeight;
+
+    
+    camera = new THREE.OrthographicCamera( viewSize * aspectRatio/- NUM, 
+    viewSize * aspectRatio / NUM, 
+    viewSize / NUM, 
+    viewSize / -NUM, 
+    NEAR, 
+    FAR);
+
+    camera.position.set(x,y,z);
     camera.lookAt(scene.position);
 }
 
@@ -121,7 +136,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
    
     createScene();
-    createCamera();
+    createCamera(50,50,50);
     
     render();
     
