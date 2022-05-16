@@ -7,6 +7,24 @@ const NUM = 2;
 const NEAR = 1;
 const FAR = 1000;
 
+var topAng = false;
+var lateralAng = false;
+var defaultAng = false;
+
+var v1Rotation = false;
+var v1Dir = 0;
+
+var v2Rotation = false;
+var v2Dir = 0;
+
+var v3Rotation = false;
+var v3Dir = 0;
+
+var forwardMove = false;
+var backwardMove = false;
+var leftMove = false;
+var rightMove = false;
+
 function createScene() {
     'use strict';
     
@@ -58,6 +76,75 @@ function lateralAngle() {
     
 }
 
+function rotateV1() {
+    'use strict'
+    if(v1Dir) {
+        obj1.rotateY(0.01);
+        obj2.rotateY(0.01);
+        obj3.rotateY(0.01);
+    }
+    else {
+        obj1.rotateY(-0.01);
+        obj2.rotateY(-0.01);
+        obj3.rotateY(-0.01);
+    }
+}
+
+function rotateV2() {
+    'use strict'
+
+    if(v2Dir) {
+        obj2.rotateX(0.01);
+    }
+    else {
+        obj2.rotateX(-0.01);
+    }
+}
+
+function rotateV3() {
+    'use strict'
+
+    if(v3Dir) {
+        obj3.rotateZ(0.01);
+    }
+    else {
+        obj3.rotateZ(-0.01);
+    }
+}
+
+function turnWireframe() {
+        scene.traverse(function (node) {
+            if (node instanceof THREE.Mesh) {
+                node.material.wireframe = !node.material.wireframe;
+            }
+        })
+}
+
+function moveForward() {
+    obj1.translateZ(-0.4);
+    obj2.translateZ(-0.4);
+    obj3.translateZ(-0.4);
+}
+
+function moveBackwards() {
+    obj1.translateZ(0.4);
+    obj2.translateZ(0.4);
+    obj3.translateZ(0.4);
+}
+
+function moveLeft() {
+    obj1.translateX(-0.4);
+    obj2.translateX(-0.4);
+    obj3.translateX(-0.4);
+}
+
+function moveRight() {
+    obj1.translateX(0.4);
+    obj2.translateX(0.4);
+    obj3.translateX(0.4);
+}
+
+
 function onResize() {
     'use strict';
 
@@ -68,6 +155,7 @@ function onResize() {
         camera.updateProjectionMatrix();
     }
 
+
 }
 
 function onKeyDown(e) {
@@ -75,52 +163,111 @@ function onKeyDown(e) {
     
     switch (e.key) {
     
-    // case 'S':  //S
-    // case 's': //s
-    //     ball.userData.jumping = !ball.userData.jumping;
-    //     break;
-    case 'E':  //E
-    case 'e': //e
-        scene.traverse(function (node) {
-            if (node instanceof THREE.AxisHelper) {
-                node.visible = !node.visible;
-            }
-        });
-        break;
-    case '1': // 1
-        defaultAngle();
-        break;
-    case '2': // 2
-        topAngle();
-        break;
-    case '3': // 3
-        lateralAngle();
-        break;
-    case '4': // 4
-        scene.traverse(function (node) {
-            if (node instanceof THREE.Mesh) {
-                node.material.wireframe = !node.material.wireframe;
-            }
-        });
-        break;
-    case 'q':
-        cone.rotateY(-0.1);
-        break;
-    case 'Q':
-        cone.rotateY(0.1);
-        break;
-    case 'z':
-        cone.rotateZ(0.1);
-        break;
-    case 'Z':
-        cone.rotateZ(0.1);
-        break;
-    // case 'd':
-    //     table.rotateX(0.1);
-    //     break;
+        case 'E':  //E
+        case 'e': //e
+            scene.traverse(function (node) {
+                if (node instanceof THREE.AxisHelper) {
+                    node.visible = !node.visible;
+                }
+            });
+            break;
+        case '1': // 1
+            defaultAng = true;
+            break;
+        case '2': // 2
+            topAng = true;
+            break;
+        case '3': // 3
+            lateralAng = true;
+            break;
+        case '4': // 4
+            turnWireframe();
+            break;
+        case 'q' || 'Q':
+            v1Rotation = true;
+            v1Dir = 0;
+            break;
+        case 'w' || 'W':
+            v1Rotation = true;
+            v1Dir = 1;
+            break;
+        case 'a' || 'A':
+            v2Rotation = true;
+            v2Dir = 0;
+            break;
+        case 's' || 'S':
+            v2Rotation = true;
+            v2Dir = 1;
+            break;
+        case 'z' || 'Z':
+            v3Rotation = true;
+            v3Dir = 0;
+            break;
+        case 'x' || 'X':
+            v3Rotation = true;
+            v3Dir = 1;
+            break;
+        case 'ArrowUp':
+            forwardMove = true;
+            break;
+        case 'ArrowDown':
+            backwardMove = true;
+            break;
+        case 'ArrowLeft':
+            leftMove = true;
+            break;
+        case 'ArrowRight':
+            rightMove = true;
+            break;
     }
 }
 
+function onKeyUp(e) {
+    'use strict'
+
+    switch (e.key) {
+    
+        case '1': // 1
+            defaultAng = false;
+            break;
+        case '2': // 2
+            topAng = false;
+            break;
+        case '3': // 3
+            lateralAng = false;
+            break;
+        case 'q' || 'Q':
+            v1Rotation = false;
+            break;
+        case 'w' || 'W':
+            v1Rotation = false;
+            break;
+        case 'a' || 'A':
+            v2Rotation = false;
+            break;
+        case 's' || 'S':
+            v2Rotation = false;
+            break;
+        case 'z' || 'Z':
+            v3Rotation = false;
+            break;
+        case 'x' || 'X':
+            v3Rotation = false;
+            break;
+        case 'ArrowUp':
+            forwardMove = false;
+            break;
+        case 'ArrowDown':
+            backwardMove = false;
+            break;
+        case 'ArrowLeft':
+            leftMove = false;
+            break;
+        case 'ArrowRight':
+            rightMove = false;
+            break;
+    }
+}
 
 function render() {
     'use strict';
@@ -141,17 +288,23 @@ function init() {
     render();
     
     window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp)
     window.addEventListener("resize", onResize);
 }
 
 function animate() {
     'use strict';
-    
-    // if (ball.userData.jumping) {
-    //     ball.userData.step += 0.04;
-    //     ball.position.y = Math.abs(30 * (Math.sin(ball.userData.step)));
-    //     ball.position.z = 15 * (Math.cos(ball.userData.step));
-    // }
+
+    if(topAng) { topAngle(); };
+    if(lateralAng) { lateralAngle(); };
+    if(defaultAng) { defaultAngle(); };
+    if(v1Rotation) { rotateV1(); };
+    if(v2Rotation) { rotateV2(); };
+    if(v3Rotation) { rotateV3(); };
+    if(forwardMove) { moveForward(); };
+    if(backwardMove) { moveBackwards(); };
+    if(leftMove) { moveLeft(); };
+    if(rightMove) { moveRight(); };
     render();
     
     requestAnimationFrame(animate);
