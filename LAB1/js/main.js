@@ -11,9 +11,10 @@ function createScene() {
     scene.add(new THREE.AxisHelper(10));
     
     createObj1(0, 0, 0);
+    createObj2(0, 0, 0);
     createObj3(0, 0, 0);
-    createTable(0, 8, 0);
-    createBall(0, 0, 15);
+    // createTable(0, 8, 0);
+    // createBall(0, 0, 15);
 }
 
 function createCamera() {
@@ -59,10 +60,10 @@ function onKeyDown(e) {
     
     switch (e.key) {
     
-    case 'S':  //S
-    case 's': //s
-        ball.userData.jumping = !ball.userData.jumping;
-        break;
+    // case 'S':  //S
+    // case 's': //s
+    //     ball.userData.jumping = !ball.userData.jumping;
+    //     break;
     case 'E':  //E
     case 'e': //e
         scene.traverse(function (node) {
@@ -99,9 +100,9 @@ function onKeyDown(e) {
     case 'Z':
         cone.rotateZ(0.1);
         break;
-    case 'd':
-        table.rotateX(0.1);
-        break;
+    // case 'd':
+    //     table.rotateX(0.1);
+    //     break;
     }
 }
 
@@ -131,11 +132,11 @@ function init() {
 function animate() {
     'use strict';
     
-    if (ball.userData.jumping) {
-        ball.userData.step += 0.04;
-        ball.position.y = Math.abs(30 * (Math.sin(ball.userData.step)));
-        ball.position.z = 15 * (Math.cos(ball.userData.step));
-    }
+    // if (ball.userData.jumping) {
+    //     ball.userData.step += 0.04;
+    //     ball.position.y = Math.abs(30 * (Math.sin(ball.userData.step)));
+    //     ball.position.z = 15 * (Math.cos(ball.userData.step));
+    // }
     render();
     
     requestAnimationFrame(animate);
