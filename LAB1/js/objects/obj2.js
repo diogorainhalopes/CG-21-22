@@ -32,8 +32,11 @@ function createObj2(x, y, z) {
     material = new THREE.MeshBasicMaterial({ color: 0x0001287, wireframe: true });
     addTorus(obj2, 5, -32, -24, Math.PI/2, 0, 0, 10, 3, 16, 100);
     addCylinder(obj2, 27, 32, 24, 0, 0, 0, 5, 5, 10, 32);
+    addCylinder(obj2, -15, -26, 18, Math.PI/2, 0, 0, 5, 5, 24, 32);
+    addCylinder(obj2, -39, 0, 0, Math.PI/2, 0, Math.PI/2, 5, 5, 10, 32);
+    addCylinder(obj2, -29, 7.5, 0, 0, 0, 0, 5, 5, 15, 32);
     
-    obj2.rotation.set(x, y, z);
+    obj2.position.set(x, y, z);
     scene.add(obj2);
 
 }

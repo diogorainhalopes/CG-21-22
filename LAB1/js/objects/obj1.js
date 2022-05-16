@@ -40,7 +40,7 @@ function createObj1(x, y, z) {
     addCone(obj1, 50*Math.cos(1.7*pi), -40, -50*Math.sin(1.7*pi), -pi/2, 0, 1.2*pi, 
             6, 10, 8); // bot dir
 
-    obj1.rotation.set(x, y, z);
+    obj1.position.set(x, y, z);
     scene.add(obj1);
 
 

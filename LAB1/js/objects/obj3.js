@@ -42,10 +42,10 @@ function createObj3(x, y, z) {
     addCube(obj3, 5, 23, -24, 8, 8, 8);
     addCube(obj3, -40, -5, -11, 5, 2, 8);
     addDodecahedron(obj3, -20, 12, 14);
-    addSphere(obj3, -25, -21, 14, 3);
+    addSphere(obj3, 0, 21, 0, 3);
     addSphere(obj3, 25, -37, -14, 7);
     
-    obj3.rotation.set(x, y, z);
+    obj3.position.set(x, y, z);
     scene.add(obj3);
 
 }
