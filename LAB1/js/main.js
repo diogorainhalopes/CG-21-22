@@ -3,7 +3,7 @@
 var camera, scene, renderer;
 var aspectRatio;
 var viewSize = 150;
-const NUM = 2;
+const NUM = 2.1;
 const NEAR = 1;
 const FAR = 1000;
 
@@ -148,11 +148,16 @@ function moveRight() {
 function onResize() {
     'use strict';
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
     
     if (window.innerHeight > 0 && window.innerWidth > 0) {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.left = window.innerWidth / -NUM;
+        camera.right = window.innerWidth / NUM;
+        camera.top = window.innerHeight / NUM;
+        camera.bottom = window.innerHeight / -NUM;
+
         camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
 
