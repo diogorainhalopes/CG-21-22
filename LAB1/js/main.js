@@ -33,11 +33,10 @@ function createScene() {
     
     scene.add(new THREE.AxisHelper(10));
     
+    // Args define the center of the object (and their rotation)
     createObj1(0, 0, 0);
     createObj2(0, 0, 0);
-    createObj3(0, 0, 0);
-    // createTable(0, 8, 0);
-    // createBall(0, 0, 15);
+    createObj3(-20, 12, 14);
 }
 
 function createCamera(x,y,z) {

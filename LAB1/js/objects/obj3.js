@@ -38,12 +38,12 @@ function createObj3(x, y, z) {
     'use strict'
 
     obj3 = new THREE.Object3D();
-    material = new THREE.MeshBasicMaterial({ color: 0x003212, wireframe: true });
-    addCube(obj3, 5, 23, -24, 8, 8, 8);
-    addCube(obj3, -40, -5, -11, 5, 2, 8);
-    addDodecahedron(obj3, -20, 12, 14);
-    addSphere(obj3, 0, 21, 0, 3);
-    addSphere(obj3, 25, -37, -14, 7);
+    material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    addCube(obj3, 5-x, 23-y, -24-z, 8, 8, 8);
+    addCube(obj3, -40-x, -7-y, -11-z, 5, 2, 8);
+    addDodecahedron(obj3, -20-x, 12-y, 14-z);
+    addSphere(obj3, 0-x, 21-y, 0-z, 3);
+    addSphere(obj3, 25-x, -37-y, -14-z, 7);
     
     obj3.position.set(x, y, z);
     scene.add(obj3);
