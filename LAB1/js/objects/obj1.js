@@ -19,7 +19,7 @@ function createObj1(x, y, z) {
     'use strict'
 
     obj1 = new THREE.Object3D();
-    material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     addCone(obj1, 50*Math.cos(pi/10)-x, 40-y, -50*Math.sin(pi/10)-z, 
             -pi/2, 0, -pi/3, 
             5, 8, 3); // top dir

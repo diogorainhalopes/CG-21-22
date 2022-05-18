@@ -4,8 +4,13 @@ var camera, scene, renderer;
 var aspectRatio;
 var viewSize = 150;
 const NUM = 2.1;
-const NEAR = 1;
+const NEAR = -100;
 const FAR = 1000;
+
+var clock;
+var deltaT;
+
+var g0, g1;
 
 var topAng = false;
 var lateralAng = false;
@@ -24,6 +29,8 @@ var forwardMove = false;
 var backwardMove = false;
 var leftMove = false;
 var rightMove = false;
+var upMove = false;
+var downMove = false;
 
 function createScene() {
     'use strict';
@@ -37,23 +44,55 @@ function createScene() {
     createObj1(0, 0, 0);
     createObj2(0, 0, 0);
     createObj3(0, 21, 0);
+
+    g1 = new THREE.Object3D();
+    g1.add(obj2);
+    g1.add(obj3);
+    g1.position.set(0, 0, 0);
+
+    g0 = new THREE.Object3D();
+    g0.add(obj1);
+    g0.add(g1);
+    g0.position.set(0, 0, 0);
+    scene.add(g0);
 }
 
 function createCamera(x,y,z) {
     'use strict';
 
     aspectRatio = window.innerWidth / window.innerHeight;
-
     
-    camera = new THREE.OrthographicCamera( viewSize * aspectRatio/- NUM, 
-    viewSize * aspectRatio / NUM, 
-    viewSize / NUM, 
-    viewSize / -NUM, 
-    NEAR, 
-    FAR);
+    camera = new THREE.OrthographicCamera( 
+        viewSize * aspectRatio/- 2, 
+        viewSize * aspectRatio / 2, 
+        viewSize / 2, 
+        viewSize / -2, 
+        NEAR, 
+        FAR
+        );
 
     camera.position.set(x,y,z);
     camera.lookAt(scene.position);
+}
+
+function onResize() {
+    'use strict';
+
+    aspectRatio = window.innerWidth / window.innerHeight;
+    
+    if (window.innerHeight > 0 && window.innerWidth > 0) {
+        
+        camera.right = viewSize * aspectRatio / 2;
+        camera.left = -camera.right;
+
+        camera.top = viewSize / 2;
+        camera.bottom = -camera.top;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }
 }
 
 function defaultAngle() {
@@ -78,14 +117,10 @@ function lateralAngle() {
 function rotateV1() {
     'use strict'
     if(v1Dir) {
-        obj1.rotateY(0.01);
-        obj2.rotateY(0.01);
-        obj3.rotateY(0.01);
+        g0.rotateY(deltaT*2);
     }
     else {
-        obj1.rotateY(-0.01);
-        obj2.rotateY(-0.01);
-        obj3.rotateY(-0.01);
+        g0.rotateY(-deltaT*2);
     }
 }
 
@@ -93,10 +128,10 @@ function rotateV2() {
     'use strict'
 
     if(v2Dir) {
-        obj2.rotateX(0.01);
+        g1.rotateX(deltaT*2);
     }
     else {
-        obj2.rotateX(-0.01);
+        g1.rotateX(-deltaT*2);
     }
 }
 
@@ -104,10 +139,10 @@ function rotateV3() {
     'use strict'
 
     if(v3Dir) {
-        obj3.rotateZ(0.01);
+        obj3.rotateZ(deltaT*2);
     }
     else {
-        obj3.rotateZ(-0.01);
+        obj3.rotateZ(-deltaT*2);
     }
 }
 
@@ -120,108 +155,98 @@ function turnWireframe() {
 }
 
 function moveForward() {
-    obj1.translateZ(-0.4);
-    obj2.translateZ(-0.4);
-    obj3.translateZ(-0.4);
+    g0.translateX(-deltaT*50);
 }
 
 function moveBackwards() {
-    obj1.translateZ(0.4);
-    obj2.translateZ(0.4);
-    obj3.translateZ(0.4);
+    g0.translateX(deltaT*50);
 }
 
 function moveLeft() {
-    obj1.translateX(-0.4);
-    obj2.translateX(-0.4);
-    obj3.translateX(-0.4);
+    g0.translateY(-deltaT*50);
 }
 
 function moveRight() {
-    obj1.translateX(0.4);
-    obj2.translateX(0.4);
-    obj3.translateX(0.4);
+    g0.translateY(deltaT*50);
+}
+
+function moveUp() {
+    g0.translateZ(-deltaT*50);
+}
+
+function moveDown() {
+    g0.translateZ(deltaT*50);
 }
 
 
-function onResize() {
-    'use strict';
 
-    
-    if (window.innerHeight > 0 && window.innerWidth > 0) {
-        camera.left = window.innerWidth / -NUM;
-        camera.right = window.innerWidth / NUM;
-        camera.top = window.innerHeight / NUM;
-        camera.bottom = window.innerHeight / -NUM;
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-
-}
 
 function onKeyDown(e) {
     'use strict';
     
-    switch (e.key) {
+    switch (e.keyCode) {
     
-        case 'E':  //E
-        case 'e': //e
-            scene.traverse(function (node) {
-                if (node instanceof THREE.AxisHelper) {
-                    node.visible = !node.visible;
-                }
-            });
-            break;
-        case '1': // 1
+        case 49: // 1
             defaultAng = true;
             break;
-        case '2': // 2
+        case 50: // 2
             topAng = true;
             break;
-        case '3': // 3
+        case 51: // 3
             lateralAng = true;
             break;
-        case '4': // 4
+        case 52: // 4
             turnWireframe();
             break;
-        case 'q' || 'Q':
+        case 113: //q
+        case 81:
             v1Rotation = true;
             v1Dir = 0;
             break;
-        case 'w' || 'W':
+        case 119: // w
+        case 87:
             v1Rotation = true;
             v1Dir = 1;
             break;
-        case 'a' || 'A':
+        case 97: // a
+        case 65:
             v2Rotation = true;
             v2Dir = 0;
             break;
-        case 's' || 'S':
+        case 115: // s
+        case 83:
             v2Rotation = true;
             v2Dir = 1;
             break;
-        case 'z' || 'Z':
+        case 122: // z
+        case 90:
             v3Rotation = true;
             v3Dir = 0;
             break;
-        case 'x' || 'X':
+        case 120: // x
+        case 88:
             v3Rotation = true;
             v3Dir = 1;
             break;
-        case 'ArrowUp':
+        case 38: // UP
             forwardMove = true;
             break;
-        case 'ArrowDown':
+        case 40: // down
             backwardMove = true;
             break;
-        case 'ArrowLeft':
+        case 37: // left
             leftMove = true;
             break;
-        case 'ArrowRight':
+        case 39: // right
             rightMove = true;
+            break;
+        case 100: // d
+        case 68:
+            upMove = true;
+            break;
+        case 99: // c
+        case 67:
+            downMove = true;
             break;
     }
 }
@@ -229,46 +254,60 @@ function onKeyDown(e) {
 function onKeyUp(e) {
     'use strict'
 
-    switch (e.key) {
+    switch (e.keyCode) {
     
-        case '1': // 1
+        case 49: // 1
             defaultAng = false;
             break;
-        case '2': // 2
+        case 50: // 2
             topAng = false;
             break;
-        case '3': // 3
+        case 51: // 3
             lateralAng = false;
             break;
-        case 'q' || 'Q':
+        case 113: //q
+        case 81:
             v1Rotation = false;
             break;
-        case 'w' || 'W':
+        case 119: // w
+        case 87:
             v1Rotation = false;
             break;
-        case 'a' || 'A':
+        case 97: // a
+        case 65:
             v2Rotation = false;
             break;
-        case 's' || 'S':
+        case 115: // s
+        case 83:
             v2Rotation = false;
             break;
-        case 'z' || 'Z':
+        case 122: // z
+        case 90:
             v3Rotation = false;
             break;
-        case 'x' || 'X':
+        case 120: // x
+        case 88:
             v3Rotation = false;
             break;
-        case 'ArrowUp':
+        case 38: // up
             forwardMove = false;
             break;
-        case 'ArrowDown':
+        case 40: // down
             backwardMove = false;
             break;
-        case 'ArrowLeft':
+        case 37: // left
             leftMove = false;
             break;
-        case 'ArrowRight':
+        case 39:  // right
             rightMove = false;
+            break;
+        case 100: // d
+        case 68:
+            upMove = false;
+            break;
+        case 99: // c
+        case 67:
+            downMove = false;
             break;
     }
 }
@@ -285,7 +324,9 @@ function init() {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-   
+    
+    clock = new THREE.Clock(true);
+
     createScene();
     createCamera(50,50,50);
     
@@ -298,6 +339,7 @@ function init() {
 
 function animate() {
     'use strict';
+    deltaT = clock.getDelta();
 
     if(topAng) { topAngle(); };
     if(lateralAng) { lateralAngle(); };
@@ -309,6 +351,8 @@ function animate() {
     if(backwardMove) { moveBackwards(); };
     if(leftMove) { moveLeft(); };
     if(rightMove) { moveRight(); };
+    if(upMove) { moveUp(); };
+    if(downMove) { moveDown(); };
     render();
     
     requestAnimationFrame(animate);
