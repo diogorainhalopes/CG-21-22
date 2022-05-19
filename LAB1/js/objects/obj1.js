@@ -39,6 +39,9 @@ function createObj1(x, y, z) {
     material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
     addCone(obj1, 50*Math.cos(1.7*pi)-x, -40-y, -50*Math.sin(1.7*pi)-z, -pi/2, 0, 1.2*pi, 
             6, 10, 8); // bot dir
+    
+    material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+    addSphere(obj1, 0, -25, 0, 2); // centre
 
     obj1.position.set(x, y, z);
     scene.add(obj1);
