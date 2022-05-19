@@ -43,7 +43,7 @@ function createScene() {
     // Args define the center of the object (and their rotation)
     createObj1(0, 0, 0);
     createObj2(0, 0, 0);
-    createObj3(0, 0, 0);
+    createObj3(0, 21, 0);
 
     g1 = new THREE.Object3D();
     g1.add(obj2);
