@@ -1,0 +1,6 @@
+
+class SpaceDebris extends SpaceEntity {
+
+
+    
+}

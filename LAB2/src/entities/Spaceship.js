@@ -1,0 +1,6 @@
+
+class Spaceship extends SpaceEntity {
+
+
+    
+}
