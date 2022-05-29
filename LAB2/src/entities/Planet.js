@@ -13,8 +13,11 @@ class Planet extends THREE.Object3D {
 
     createCosmicBody(radius) {
         
-        const geometry = new THREE.SphereGeometry(radius, 32, 16 );
-        const material = new THREE.MeshBasicMaterial( { color: 0x28a3d4 } );
+        const geometry = new THREE.SphereGeometry(radius, 64, 64 );
+        const material = new THREE.MeshPhongMaterial({ 
+            map: new THREE.TextureLoader().load("images/earth4k.jpg"),
+            bumpScale: 1
+        });
         const cosmicBody = new THREE.Mesh(geometry, material );
         scene.add(cosmicBody);
 
@@ -27,6 +30,9 @@ class Planet extends THREE.Object3D {
     setRadius(radius) {
         this.radius = radius;
     
+    }
+    rotateItself(angle) {
+        this.rotateY(angle);
     }
 
 

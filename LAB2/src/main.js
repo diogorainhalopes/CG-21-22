@@ -11,6 +11,9 @@ const FAR = 1000;
 const PLANET_RADIUS = 50;
 const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
 
+var teste;
+var clock, deltaScale;
+
 var topAng = false;
 var lateralAng = false;
 var defaultAng = false;
@@ -20,11 +23,14 @@ function createScene() {
 
     'use strict';
     scene = new THREE.Scene();
+    scene.add(new THREE.AmbientLight(0xffffff));
     scene.add(new THREE.AxisHelper(100));
-    
-    spaceEntities[0] = buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
-    spaceEntities[1] = CreatePlanet(0,0,0,PLANET_RADIUS);
+    teste = new Planet(0,0,0,PLANET_RADIUS);
 
+    scene.add(teste);
+    spaceEntities[0] = buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
+    //spaceEntities[1] = CreatePlanet(0,0,0,PLANET_RADIUS);
+    
 
 }
 
@@ -138,13 +144,16 @@ function init() {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+
+    clock = new THREE.Clock(true);
+    deltaScale = 1;
+
     
     createScene();
     camera[0] = createCamera(120,0,0);
     camera[1] = createCamera(0,120,0);
     camera[2] = createCamera(0,0,120);
     
-    render();
     
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp)
@@ -154,11 +163,13 @@ function init() {
 function animate() {
     'use strict';
 
+    let deltaTime = clock.getDelta() * deltaScale;
+
     if(topAng) { switchCamera()};
     if(lateralAng) { switchCamera(); };
     if(defaultAng) { switchCamera(); };
-
-    render();
+    teste.rotateItself(deltaTime);
     
+    render();
     requestAnimationFrame(animate);
 }
