@@ -12,8 +12,8 @@ class Planet extends THREE.Object3D {
     }
 
     createCosmicBody(radius) {
-        const geometry = new THREE.SphereGeometry(radius, 32, 16 );
         
+        const geometry = new THREE.SphereGeometry(radius, 32, 16 );
         const material = new THREE.MeshBasicMaterial( { color: 0x28a3d4 } );
         const cosmicBody = new THREE.Mesh(geometry, material );
         scene.add(cosmicBody);

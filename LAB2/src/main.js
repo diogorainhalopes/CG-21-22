@@ -8,7 +8,12 @@ var viewSize = 150;
 const NUM = 2.1;
 const NEAR = 50;
 const FAR = 1000;
-const ORBIT_LENGTH = 1.20 * 100;
+const PLANET_RADIUS = 50;
+const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
+
+var topAng = false;
+var lateralAng = false;
+var defaultAng = false;
 
 
 function createScene() {
@@ -17,9 +22,8 @@ function createScene() {
     scene = new THREE.Scene();
     scene.add(new THREE.AxisHelper(100));
     
-    
-    spaceEntities[0] = buildShip(40,40,40,15);
-    spaceEntities[1] = CreatePlanet(0,0,0,50);
+    spaceEntities[0] = buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
+    spaceEntities[1] = CreatePlanet(0,0,0,PLANET_RADIUS);
 
 
 }
@@ -64,6 +68,12 @@ function onResize() {
     }
 }
 
+
+function switchCamera() {
+    'use strict'
+    camera[indexCamera].lookAt(scene.position);
+}
+
 function turnWireframe() {
         scene.traverse(function (node) {
             if (node instanceof THREE.Mesh) {
@@ -79,26 +89,40 @@ function onKeyDown(e) {
     
         case 49: // 1
             defaultAng = true;
+            indexCamera = 0;
             break;
         case 50: // 2
             topAng = true;
+            indexCamera = 1;
             break;
         case 51: // 3
             lateralAng = true;
+            indexCamera = 2;
             break;
         case 52: // 4
             turnWireframe();
             break;
     }
+
 }
 
 function onKeyUp(e) {
     'use strict'
 
     switch (e.keyCode) {
-    
-    
+
+        case 49: // 1
+            defaultAng = false;
+        break;
+            case 50: // 2
+            topAng = false;
+            break;
+        case 51: // 3
+            lateralAng = false;
+            break;
+
     }
+
 }
 
 
@@ -129,6 +153,10 @@ function init() {
 
 function animate() {
     'use strict';
+
+    if(topAng) { switchCamera()};
+    if(lateralAng) { switchCamera(); };
+    if(defaultAng) { switchCamera(); };
 
     render();
     

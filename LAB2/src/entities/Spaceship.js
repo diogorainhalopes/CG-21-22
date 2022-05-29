@@ -23,7 +23,7 @@ class Spaceship extends SpaceEntity {
     constructor(x,y,z,planetRadius) {
         super(x,y,z);
         this.setTotalHeight(planetRadius);
-        this.assembleSpaceShip(planetRadius);
+        this.assembleSpaceShip(x,y,z);
 
     }
 
@@ -39,33 +39,38 @@ class Spaceship extends SpaceEntity {
 
     }
 
-    assembleSpaceShip(planetRadius) {
+    assembleSpaceShip(x,y,z) {
 
 
-        this.addSpaceShipMainBody(planetRadius);
-        this.addSpaceShipNose(planetRadius);
-        this.addSpaceShipPropellers(planetRadius);
+        this.addSpaceShipMainBody(x,y,z);
+        this.addSpaceShipNose(x,y,z);
+        this.addSpaceShipPropellers();
         scene.add(this);
     }
 
 
-    addSpaceShipMainBody(planetRadius) {
-
+    addSpaceShipMainBody(x,y,z) {
 
         // the main cylinder (body) takes up 3/4 of the Spaceship total height
+        const mainBodyHeight = 3/4*this.getTotalHeight();
+        const geometry = new THREE.CylinderGeometry(10, 10, mainBodyHeight, 32 );
+        const material = new THREE.MeshBasicMaterial( {color: 0x7a7476} );
+        const spaceshipMainBody = new THREE.Mesh( geometry, material);
 
-      
-        const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
-        const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-        const mainBody = new THREE.Mesh( geometry, material);
-        this.add(mainBody)
+        //spaceshipMainBody.position.set(x,y,z)
+        this.add(spaceshipMainBody)
     }
 
-    addSpaceShipNose(planetRadius) {
+    addSpaceShipNose(x,y,z) {
 
-
-
-
+        const noseHeight = 1/8*this.getTotalHeight();
+        const geometry = new THREE.CylinderGeometry(10, 10, noseHeight, 32 );
+        const material = new THREE.MeshBasicMaterial( {color: 0xe61e1e} );
+        const spaceshipNose = new THREE.Mesh(geometry, material);
+        
+        //spaceshipNose.position.set(x,y,z-10);
+        this.add(spaceshipNose);
+       
     }
 
     addPropellers() {
