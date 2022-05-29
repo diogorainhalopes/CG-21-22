@@ -22,11 +22,25 @@ class Spaceship extends SpaceEntity {
 
     constructor(x,y,z,planetRadius) {
         super(x,y,z);
-        this.assembleSpaceShip(x,y,z,planetRadius);
+        this.setTotalHeight(planetRadius);
+        this.assembleSpaceShip(planetRadius);
+
     }
 
 
-    assembleSpaceShip(x,y,z) {
+    getTotalHeight() {
+        return this.totalHeight;
+    }
+
+    setTotalHeight(planetRadius) {
+        // for now 
+        this.totalHeight = planetRadius/11;
+        console.log(this.totalHeight)
+
+    }
+
+    assembleSpaceShip(planetRadius) {
+
 
         this.addSpaceShipMainBody(planetRadius);
         this.addSpaceShipNose(planetRadius);
@@ -34,12 +48,17 @@ class Spaceship extends SpaceEntity {
         scene.add(this);
     }
 
+
     addSpaceShipMainBody(planetRadius) {
-        var height = 2/3 * planetRadius
+
+
+        // the main cylinder (body) takes up 3/4 of the Spaceship total height
+
+      
         const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
         const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         const mainBody = new THREE.Mesh( geometry, material);
-        this.add(cylinder)
+        this.add(mainBody)
     }
 
     addSpaceShipNose(planetRadius) {
@@ -49,16 +68,20 @@ class Spaceship extends SpaceEntity {
 
     }
 
+    addPropellers() {
 
+
+    }
     addSpaceShipPropellers() {
         this.addPropellers();
     }
     
 }
 
-function buildShip(x,y,z) {
+function buildShip(x,y,z,planetRadius) {
     var ship;
-    ship = new Spaceship(x,y,z);
+    ship = new Spaceship(x,y,z,planetRadius);
     spaceEntities.push(ship);
 
 }
+

@@ -8,18 +8,18 @@ var viewSize = 150;
 const NUM = 2.1;
 const NEAR = 50;
 const FAR = 1000;
-
-
-var planet;
+const ORBIT_LENGTH = 1.20 * 100;
 
 
 function createScene() {
 
     'use strict';
     scene = new THREE.Scene();
-    scene.add(new THREE.AxisHelper(10));
-
-    spaceEntities[0] = buildShip(45,45,45);
+    scene.add(new THREE.AxisHelper(100));
+    
+    
+    spaceEntities[0] = buildShip(40,40,40,15);
+    spaceEntities[1] = CreatePlanet(0,0,0,50);
 
 
 }
@@ -64,26 +64,31 @@ function onResize() {
     }
 }
 
-
-
+function turnWireframe() {
+        scene.traverse(function (node) {
+            if (node instanceof THREE.Mesh) {
+                node.material.wireframe = !node.material.wireframe;
+            }
+        })
+}
 
 function onKeyDown(e) {
     'use strict';
     
     switch (e.keyCode) {
-
-        case 49: //1
-        indexCamera = 0;
-        break;
-
-    case 50: //2
-        indexCamera = 1;
-        break;
-
-    case 51:  //3
-        indexCamera = 2;
-        break;
     
+        case 49: // 1
+            defaultAng = true;
+            break;
+        case 50: // 2
+            topAng = true;
+            break;
+        case 51: // 3
+            lateralAng = true;
+            break;
+        case 52: // 4
+            turnWireframe();
+            break;
     }
 }
 
@@ -92,9 +97,10 @@ function onKeyUp(e) {
 
     switch (e.keyCode) {
     
-     
+    
     }
 }
+
 
 function render() {
     'use strict';
