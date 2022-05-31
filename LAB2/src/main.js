@@ -18,21 +18,19 @@ var topAng = false;
 var lateralAng = false;
 var defaultAng = false;
 var planetRotation = false;
-var planetDir = 0;
 
 
 function createScene() {
 
     'use strict';
     scene = new THREE.Scene();
-    //scene.add(new THREE.AmbientLight(0xffffff));
+    scene.add(new THREE.AmbientLight(0xffffff));
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
 
     buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
-    CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);
-    
-
+    CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
+    CreateRandomDebris()
 }
 
 function createCamera(x,y,z) {
@@ -54,6 +52,13 @@ function createCamera(x,y,z) {
     return camera;
 }
 
+
+
+function CreateRandomDebris() {
+    for (let i = 0; i < 22; i++) {
+        CreateDebris();
+    }
+}
 
 function onResize() {
     'use strict';
@@ -78,12 +83,8 @@ function onResize() {
 function rotatePlanet() {
     'use strict'
     console.log("entrei na rotação");
-    if(planetDir) {
-        spaceEntities[1].rotateItself(deltaTime*2);
-    }
-    else {
-        spaceEntities[1].rotateItself(-deltaTime*2);
-    }
+    spaceEntities[1].rotateItself(deltaTime/2);
+
 }
 
 function switchCamera() {
@@ -119,15 +120,9 @@ function onKeyDown(e) {
         case 52: // 4
             turnWireframe();
             break;
-        case 113: //q
-        case 81:
-            planetRotation = true;
-            planetDir = 0;
-            break;
         case 119: // w
         case 87:
-            planetRotation = true;
-            planetDir = 1;
+            planetRotation = !planetRotation;
             break;
     }
 
