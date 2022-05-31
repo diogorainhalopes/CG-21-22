@@ -10,26 +10,27 @@ const NEAR = 50;
 const FAR = 1000;
 const PLANET_RADIUS = 50;
 const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
+const PLANET_NAME = "earth"
 
-var teste;
 var clock, deltaScale;
-
+var deltaTime;
 var topAng = false;
 var lateralAng = false;
 var defaultAng = false;
+var planetRotation = false;
+var planetDir = 0;
 
 
 function createScene() {
 
     'use strict';
     scene = new THREE.Scene();
-    scene.add(new THREE.AmbientLight(0xffffff));
-    scene.add(new THREE.AxisHelper(100));
-    teste = new Planet(0,0,0,PLANET_RADIUS);
+    //scene.add(new THREE.AmbientLight(0xffffff));
+    const axesHelper = new THREE.AxesHelper(1000);   
+    scene.add(axesHelper);
 
-    scene.add(teste);
-    spaceEntities[0] = buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
-    //spaceEntities[1] = CreatePlanet(0,0,0,PLANET_RADIUS);
+    buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
+    CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);
     
 
 }
@@ -74,6 +75,16 @@ function onResize() {
     }
 }
 
+function rotatePlanet() {
+    'use strict'
+    console.log("entrei na rotação");
+    if(planetDir) {
+        spaceEntities[1].rotateItself(deltaTime*2);
+    }
+    else {
+        spaceEntities[1].rotateItself(-deltaTime*2);
+    }
+}
 
 function switchCamera() {
     'use strict'
@@ -107,6 +118,16 @@ function onKeyDown(e) {
             break;
         case 52: // 4
             turnWireframe();
+            break;
+        case 113: //q
+        case 81:
+            planetRotation = true;
+            planetDir = 0;
+            break;
+        case 119: // w
+        case 87:
+            planetRotation = true;
+            planetDir = 1;
             break;
     }
 
@@ -163,13 +184,15 @@ function init() {
 function animate() {
     'use strict';
 
-    let deltaTime = clock.getDelta() * deltaScale;
+    deltaTime = clock.getDelta() * deltaScale;
 
-    if(topAng) { switchCamera()};
+    if(topAng) { switchCamera(); };
     if(lateralAng) { switchCamera(); };
     if(defaultAng) { switchCamera(); };
-    teste.rotateItself(deltaTime);
+    if(planetRotation) { rotatePlanet(); };
     
+    
+
     render();
     requestAnimationFrame(animate);
 }
