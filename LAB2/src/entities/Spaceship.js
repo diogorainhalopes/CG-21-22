@@ -20,11 +20,21 @@ class Spaceship extends SpaceEntity {
     // the spaceship height H should be between the following interval
     // R/12 < H < R/10
 
-    constructor(x,y,z,planetRadius) {
+    constructor(x,y,z,radius) {
         super(x,y,z);
-        this.setTotalHeight(planetRadius);
+        this.setTotalHeight(radius);
         this.assembleSpaceShip(x,y,z);
+        this.setType(name);
 
+    }
+
+    getType() {
+        return this.type;
+
+    }
+
+    setType() {
+        this.type = name;
     }
 
 
@@ -83,9 +93,9 @@ class Spaceship extends SpaceEntity {
     
 }
 
-function buildShip(x,y,z,planetRadius) {
+function buildShip(x,y,z,planetRadius,name) {
     var ship;
-    ship = new Spaceship(x,y,z,planetRadius);
+    ship = new Spaceship(x,y,z,planetRadius,name);
     spaceEntities.push(ship);
 
 }

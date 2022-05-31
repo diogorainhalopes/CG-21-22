@@ -1,24 +1,27 @@
+var cosmicBody;
 
-class Planet extends THREE.Object3D {
+class Planet extends SpaceEntity  {
 
 
-    constructor(x,y,z,radius) {
+
+    constructor(x,y,z,radius,name) {
 
         super();
-        this.position.set(x,y,z) 
+
         this.createCosmicBody(radius);
         this.setRadius(radius);
+        this.setType(name);
 
     }
 
     createCosmicBody(radius) {
         
-        const geometry = new THREE.SphereGeometry(radius, 64, 64 );
-        const material = new THREE.MeshPhongMaterial({ 
-            map: new THREE.TextureLoader().load("images/earth4k.jpg"),
-            bumpScale: 1
+        const geometry = new THREE.SphereGeometry(radius,50,50);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x2596be
+        
         });
-        const cosmicBody = new THREE.Mesh(geometry, material );
+        cosmicBody = new THREE.Mesh(geometry,material);
         scene.add(cosmicBody);
 
     }
@@ -27,21 +30,35 @@ class Planet extends THREE.Object3D {
         return this.radius;
 
     }
+
     setRadius(radius) {
         this.radius = radius;
     
     }
-    rotateItself(angle) {
-        this.rotateY(angle);
+
+    getType() {
+        return this.name;
+    
+    }
+
+    setType(name) {
+        this.name = name;
+    
+    }
+
+    rotateItself(angle) {   
+        cosmicBody.rotateY(angle);
+    
     }
 
 
+
+
 }
 
-function CreatePlanet(x,y,z,radius) {
+function CreatePlanet(x,y,z,radius,name) {
     var planet;
-    planet = new Planet(x,y,z,radius);
+    planet = new Planet(x,y,z,radius,name);
     spaceEntities.push(planet);
 
 }
-

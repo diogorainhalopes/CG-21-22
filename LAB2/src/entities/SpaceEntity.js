@@ -8,6 +8,7 @@ class SpaceEntity extends THREE.Object3D {
         
     }
 
+    getType () {}
 
     getPosition() {
         return this.position;
