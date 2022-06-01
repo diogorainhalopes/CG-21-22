@@ -167,18 +167,10 @@ class Spaceship extends SpaceEntity {
 function buildSpaceship(radius) {
     var spaceship;
     spaceship = new Spaceship(radius,name);
-    randomPosition(spaceship);
+    var positions = randomPosition(spaceship);
+    var shipCollisionObj = addCollisionRange(positions[0], positions[1], positions[2], spaceship.getTotalHeight()*0.99);
     spaceEntities.push(spaceship);
-
-}
-
-function randomPosition(spaceship) {
-    spaceship.position.x = Math.random() * 2 - 1;
-    spaceship.position.y = Math.random() * 2 - 1;
-    spaceship.position.z = Math.random() * 2 - 1;
-    spaceship.position.normalize();
-    spaceship.position.multiplyScalar( ORBIT_LENGTH );
-    spaceship.lookAt(0, 0, 0);
+    spaceEntities.push(shipCollisionObj);
 }
 
 function updateMaterialWire() {

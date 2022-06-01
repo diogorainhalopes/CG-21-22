@@ -42,7 +42,7 @@ class SpaceDebris extends SpaceEntity {
             const geometry = new THREE.BoxGeometry(w, h, d);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
-            collisionRadius = PLANET_RADIUS/20;
+            collisionRadius = Math.sqrt(Math.pow(w,2) + Math.pow(h,2) + Math.pow(d,2))/2;
         }
         if (randomShape == 5) {
             const geometry = new THREE.TorusGeometry(PLANET_RADIUS/24, PLANET_RADIUS/24, 4, 8);
@@ -50,25 +50,12 @@ class SpaceDebris extends SpaceEntity {
             debris = new THREE.Mesh(geometry,material);
             collisionRadius = PLANET_RADIUS/12;
         }
-        
-        var randX, randY, randZ;
 
-        randX = Math.random() * 2 - 1;
-        randY = Math.random() * 2 - 1;
-        randZ = Math.random() * 2 - 1;
+        var positions = randomPosition(debris);
 
-        debris.position.x = randX;
-        debris.position.y = randY;
-        debris.position.z = randZ;
-        debris.position.normalize();
-        debris.position.multiplyScalar( ORBIT_LENGTH );
-        
-        debris.lookAt(0, 0, 0);
-
-        var collisionObj = addCollisionRange(randX, randY, randZ, collisionRadius);
+        addCollisionRange(positions[0], positions[1], positions[2], collisionRadius);
 
         scene.add(debris);
-        scene.add(collisionObj);
 
     }
 

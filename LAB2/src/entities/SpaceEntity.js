@@ -18,7 +18,26 @@ class SpaceEntity extends THREE.Object3D {
         
     }
     
-} 
+}
+
+function randomPosition(object) {
+    var randX, randY, randZ;
+
+    randX = Math.random() * 2 - 1;
+    randY = Math.random() * 2 - 1;
+    randZ = Math.random() * 2 - 1;
+
+    object.position.x = randX;
+    object.position.y = randY;
+    object.position.z = randZ;
+    object.position.normalize();
+    object.position.multiplyScalar( ORBIT_LENGTH );
+    
+    object.lookAt(0, 0, 0);
+
+    const ret = [randX, randY, randZ];
+    return ret;
+}
     
 function addCollisionRange(x, y, z, radius) {
 
@@ -31,6 +50,8 @@ function addCollisionRange(x, y, z, radius) {
     body.position.normalize();
     body.position.multiplyScalar( ORBIT_LENGTH );
     body.visible = false;
+
+    scene.add(body);
 
     return body;
 }
