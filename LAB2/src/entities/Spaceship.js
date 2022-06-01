@@ -3,22 +3,16 @@ var randomColor , randomWire;
 
 class Spaceship extends SpaceEntity {
 
-    
-
-
     constructor(x,y,z,radius) {
         super(x,y,z);
-
 
         this.setup(radius);
         this.assemble();
         this.direction = new THREE.Vector3(Math.cos(-(Math.atan(0))), 
                                            0, 
                                            Math.sin(-(Math.atan(0))));
-      
-
+    
     }
-
 
     setup(radius) {
 
@@ -33,13 +27,12 @@ class Spaceship extends SpaceEntity {
 
     getTotalHeight() {
         return this.totalHeight;
+    
     }
 
     setTotalHeight(radius) {
-    
-      
         this.totalHeight = radius/11;
-    
+
     }
 
     getBoosterRadius() {
@@ -92,27 +85,19 @@ class Spaceship extends SpaceEntity {
    
     }
 
-
     assemble() {
-
-        
         scene.add(this);
         this.addBody();
         this.addNose();
         this.addAuxiliaryBoosters();        
-  
 
     }
 
     addBody() {
-        randomColor = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
-        randomWire = Math.random() < 0.5;
-
-        console.log("tamanho do main body");
-        console.log(this.getBodyHeight());
+        var materialAndWire = updateMaterialWire();
 
         const geometry = new THREE.CylinderGeometry(4,2, this.getBodyHeight(),32);
-        const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
+        const material = new THREE.MeshBasicMaterial({color: materialAndWire[0], wireframe: materialAndWire[1]});
         
         var body = new THREE.Mesh(geometry,material);
       
@@ -124,12 +109,10 @@ class Spaceship extends SpaceEntity {
     }
 
     addNose() {
-
-        randomColor = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
-        randomWire = Math.random() < 0.5;
+        var materialAndWire = updateMaterialWire();
 
         const geometry = new THREE.CylinderGeometry(2, 0,this.getNoseHeight(),32);
-        const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
+        const material = new THREE.MeshBasicMaterial({color: materialAndWire[0], wireframe: materialAndWire[1]});
         
         var nose = new THREE.Mesh(geometry,material);
       
@@ -137,17 +120,14 @@ class Spaceship extends SpaceEntity {
 	    nose.rotateY(0);
     	nose.rotateZ(90 * Math.PI / 180);
         nose.position.set(1.7,0,0);
-        
         this.add(nose);
     }
 
     addBooster(mode,pos) {
-
-        randomColor = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
-        randomWire = Math.random() < 0.5;
+        var materialAndWire = updateMaterialWire();
 
         const geometry = new THREE.CapsuleGeometry(this.getBoosterRadius(),);
-        const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
+        const material = new THREE.MeshBasicMaterial({color: materialAndWire[0], wireframe: materialAndWire[1]});
 
         var booster = new THREE.Mesh(geometry,material);
 
@@ -188,5 +168,14 @@ function buildSpaceship(x,y,z,radius,name) {
     var spaceship;
     spaceship = new Spaceship(x,y,z,radius,name);
     spaceEntities.push(spaceship);
+
+}
+
+function updateMaterialWire() {
+
+    randomColor = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+    randomWire = Math.random() < 0.5;
+    var result = [randomColor,randomWire];
+    return result
 
 }
