@@ -20,7 +20,6 @@ var lateralAng = false;
 var defaultAng = false;
 var planetRotation = false;
 
-
 function createScene() {
 
     'use strict';
@@ -171,7 +170,8 @@ function init() {
     createScene();
     camera[0] = createCamera(120,0,0);
     camera[1] = createCamera(0,120,0);
-    camera[2] = createCamera(0,0,120);
+    camera[2] = new ShipCam();
+    camera[2].setShip(spaceEntities[0]);
     
     
     window.addEventListener("keydown", onKeyDown);
@@ -189,7 +189,7 @@ function animate() {
     if(defaultAng) { switchCamera(); };
     if(planetRotation) { rotatePlanet(); };
     
-    
+    camera[2].update();
 
     render();
     requestAnimationFrame(animate);

@@ -12,6 +12,9 @@ class Spaceship extends SpaceEntity {
 
         this.setup(radius);
         this.assemble();
+        this.direction = new THREE.Vector3(Math.cos(-(Math.atan(0))), 
+                                           0, 
+                                           Math.sin(-(Math.atan(0))));
       
 
     }
