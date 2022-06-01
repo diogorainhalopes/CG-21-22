@@ -1,5 +1,5 @@
 
-var debris;
+var debris, collisionRadius;
 
 class SpaceDebris extends SpaceEntity {
 
@@ -21,16 +21,19 @@ class SpaceDebris extends SpaceEntity {
             const geometry = new THREE.SphereGeometry(PLANET_RADIUS/20, 8, 8);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
+            collisionRadius = PLANET_RADIUS/20;
         }
         if (randomShape == 2) {
             const geometry = new THREE.CylinderGeometry(PLANET_RADIUS/24, PLANET_RADIUS/24, 4, 8);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
+            collisionRadius = Math.sqrt(Math.pow(PLANET_RADIUS/24, 2) + 4);
         }
         if (randomShape == 3) {
             const geometry = new THREE.CylinderGeometry(PLANET_RADIUS/24, 0, 4, 8);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
+            collisionRadius = Math.sqrt(Math.pow(PLANET_RADIUS/24, 2) + 4);
         }
         if (randomShape == 4) {
             var w = Math.floor(Math.random() * (PLANET_RADIUS/20 - 1 + 1)) + 1;
@@ -39,24 +42,33 @@ class SpaceDebris extends SpaceEntity {
             const geometry = new THREE.BoxGeometry(w, h, d);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
+            collisionRadius = PLANET_RADIUS/20;
         }
         if (randomShape == 5) {
             const geometry = new THREE.TorusGeometry(PLANET_RADIUS/24, PLANET_RADIUS/24, 4, 8);
             const material = new THREE.MeshBasicMaterial( { color: randomColor, wireframe: randomWire } );
             debris = new THREE.Mesh(geometry,material);
+            collisionRadius = PLANET_RADIUS/12;
         }
         
+        var randX, randY, randZ;
 
+        randX = Math.random() * 2 - 1;
+        randY = Math.random() * 2 - 1;
+        randZ = Math.random() * 2 - 1;
 
-        debris.position.x = Math.random() * 2 - 1;
-        debris.position.y = Math.random() * 2 - 1;
-        debris.position.z = Math.random() * 2 - 1;
+        debris.position.x = randX;
+        debris.position.y = randY;
+        debris.position.z = randZ;
         debris.position.normalize();
         debris.position.multiplyScalar( ORBIT_LENGTH );
         
         debris.lookAt(0, 0, 0);
 
+        var collisionObj = addCollisionRange(randX, randY, randZ, collisionRadius);
+
         scene.add(debris);
+        scene.add(collisionObj);
 
     }
 

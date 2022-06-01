@@ -32,7 +32,7 @@ function createScene() {
     buildSpaceship(PLANET_RADIUS);
 
     CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
-    CreateRandomDebris()
+    CreateRandomDebris();
 }
 
 function createCameraO(x,y,z) {
