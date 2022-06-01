@@ -29,13 +29,13 @@ function createScene() {
     scene.add(axesHelper);
 
 
-    buildSpaceship(0,ORBIT_LENGTH,0,PLANET_RADIUS,SPACESHIP);
+    buildSpaceship(PLANET_RADIUS);
 
     CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
     CreateRandomDebris()
 }
 
-function createCamera(x,y,z) {
+function createCameraO(x,y,z) {
     'use strict';
 
     aspectRatio = window.innerWidth / window.innerHeight;
@@ -54,6 +54,17 @@ function createCamera(x,y,z) {
     return camera;
 }
 
+function createCameraP(x,y,z) {
+    'use strict';
+    var camera = new THREE.PerspectiveCamera(70,
+                                         window.innerWidth / window.innerHeight,
+                                         1,
+                                         1000);
+    camera.position.set(x,y,z);
+    camera.lookAt(scene.position);
+    return camera;
+}
+
 
 
 function CreateRandomDebris() {
@@ -62,13 +73,16 @@ function CreateRandomDebris() {
     }
 }
 
-function onResize() {
+function onResize() { // FIX ME resize da persp cam mal
     'use strict';
 
     aspectRatio = window.innerWidth / window.innerHeight;
-    
     if (window.innerHeight > 0 && window.innerWidth > 0) {
-        
+
+        if (window.innerWidth === 0 || window.innerHeight === 0) {
+            return;
+        }
+            
         camera[indexCamera].right = viewSize * aspectRatio / 2;
         camera[indexCamera].left = -camera[indexCamera].right;
 
@@ -78,8 +92,9 @@ function onResize() {
         camera[indexCamera].updateProjectionMatrix();
 
         renderer.setSize(window.innerWidth, window.innerHeight);
-
+        camera.updateProjectionMatrix();
     }
+    
 }
 
 function rotatePlanet() {
@@ -168,8 +183,8 @@ function init() {
 
     
     createScene();
-    camera[0] = createCamera(120,0,0);
-    camera[1] = createCamera(0,120,0);
+    camera[0] = createCameraO(120,0,0);
+    camera[1] = createCameraP(0,120,0);
     camera[2] = new ShipCam();
     camera[2].setShip(spaceEntities[0]);
     

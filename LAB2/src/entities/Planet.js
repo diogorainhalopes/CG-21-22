@@ -17,8 +17,8 @@ class Planet extends SpaceEntity  {
         
         const geometry = new THREE.SphereGeometry(radius,50,50);
         const material = new THREE.MeshBasicMaterial({ 
-            map: new THREE.TextureLoader().load("images/earthnight.jpg"),
-        
+            //map: new THREE.TextureLoader().load("images/earthnight.jpg"),
+            color: "blue"
         });
         cosmicBody = new THREE.Mesh(geometry,material);
         

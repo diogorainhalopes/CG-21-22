@@ -3,8 +3,8 @@ var randomColor , randomWire;
 
 class Spaceship extends SpaceEntity {
 
-    constructor(x,y,z,radius) {
-        super(x,y,z);
+    constructor(radius) {
+        super();
 
         this.setup(radius);
         this.assemble();
@@ -164,11 +164,21 @@ class Spaceship extends SpaceEntity {
      
 }
 
-function buildSpaceship(x,y,z,radius,name) {
+function buildSpaceship(radius) {
     var spaceship;
-    spaceship = new Spaceship(x,y,z,radius,name);
+    spaceship = new Spaceship(radius,name);
+    randomPosition(spaceship);
     spaceEntities.push(spaceship);
 
+}
+
+function randomPosition(spaceship) {
+    spaceship.position.x = Math.random() * 2 - 1;
+    spaceship.position.y = Math.random() * 2 - 1;
+    spaceship.position.z = Math.random() * 2 - 1;
+    spaceship.position.normalize();
+    spaceship.position.multiplyScalar( ORBIT_LENGTH );
+    spaceship.lookAt(0, 0, 0);
 }
 
 function updateMaterialWire() {
