@@ -10,7 +10,8 @@ const NEAR = 50;
 const FAR = 1000;
 const PLANET_RADIUS = 50;
 const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
-const PLANET_NAME = "earth"
+const PLANET_NAME = "earth";
+const SPACESHIP = "orpheus";
 
 var clock, deltaScale;
 var deltaTime;
@@ -28,7 +29,9 @@ function createScene() {
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
 
-    buildShip(ORBIT_LENGTH - 20,ORBIT_LENGTH - 20,ORBIT_LENGTH,PLANET_RADIUS);
+
+    buildSpaceship(0,ORBIT_LENGTH,0,PLANET_RADIUS,SPACESHIP);
+
     CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
     CreateRandomDebris()
 }
