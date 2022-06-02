@@ -328,15 +328,14 @@ function update() {
             var dist = spaceEntities[i].position.distanceTo(spaceship.position);
             var collisionRange = spaceEntities[i].getCollisionRadius() + spaceship.getCollisionRadius();
 
-            if (dist == collisionRange) {
+            if (spaceEntities[i].getRemoved()) {
                 // Lixo desaparece
                 spaceEntities[i].visible = false;
                 spaceEntities[i].setCollisionRadius(0);
             }
             if (dist < collisionRange) {
-                // TODO: spaceship.position.set()
-                // A posição tem de estar na direção do movimento e verificar dist == collisionRange
-            }
+                spaceEntities[i].setRemoved(true);
+            } 
         }
     }
 

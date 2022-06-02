@@ -27,7 +27,6 @@ class SpaceEntity extends THREE.Object3D {
     }
 
     computeQuadrant() {
-        // TODO: Alterar para coords esfericas
         this.quadrant = this.position.z > 0 ? (this.position.y > 0 ? 1 : 2) : (this.position.y > 0 ? 3 : 4);
     }
     

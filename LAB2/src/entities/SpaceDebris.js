@@ -9,6 +9,8 @@ class SpaceDebris extends SpaceEntity {
 
         this.setCollisionRadius(collisionRadius);
         this.randomPosition();
+        this.removed = false;
+        
         scene.add(this);
         
     }
@@ -57,6 +59,14 @@ class SpaceDebris extends SpaceEntity {
 
         this.add(debris);
 
+    }
+
+    getRemoved() {
+        return this.removed;
+    }
+
+    setRemoved(bool) {
+        this.removed = bool;
     }
 
 }
