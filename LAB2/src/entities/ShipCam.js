@@ -19,9 +19,9 @@ class ShipCam extends THREE.PerspectiveCamera {
         let vector = new THREE.Vector3(0, 0, 0);
         this.ship.getWorldPosition(vector);
         this.position.set(
-            vector.x + this.ship.direction.x ,
+            vector.x + this.ship.position.x ,
             vector.y + 10,
-            vector.z + this.ship.direction.z 
+            vector.z + this.ship.position.z 
         );
         this.lookAt(vector);
     }
