@@ -144,9 +144,8 @@ function getCartesianCoords(pos) {
 
 
 function moveForward() {
-    var old = spaceEntities[0].position.z;
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move")
+    console.log("inicio move UPPPPP")
     console.log(spaceEntities[0].position);
     console.log(currentPosition);
     
@@ -156,21 +155,56 @@ function moveForward() {
 
     var newPosition = getCartesianCoords(currentPosition);
     console.log(newPosition);
-    console.log("fim move");
-    spaceEntities[0].position.set(newPosition.x, newPosition.y, old);
-    //orbit.rotateOnAxis(yx, deltaTime*3);
+    console.log("fim move UPPPPP");
+    spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 }
 
 function moveBackwards() {
-    orbit.rotateY(-deltaTime*3);
+    var currentPosition = getSphericalCoords(spaceEntities[0].position);
+    console.log("inicio move DOWN")
+    console.log(spaceEntities[0].position);
+    console.log(currentPosition);
+    
+    currentPosition.y = currentPosition.y - Math.PI/200;
+    
+    console.log(currentPosition);
+
+    var newPosition = getCartesianCoords(currentPosition);
+    console.log(newPosition);
+    console.log("fim move DOWN");
+    spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 }
 
 function moveLeft() {
-    orbit.rotateX(deltaTime*3);
+    var currentPosition = getSphericalCoords(spaceEntities[0].position);
+    console.log("inicio move ESQQ")
+    console.log(spaceEntities[0].position);
+    console.log(currentPosition);
+    
+    currentPosition.z = currentPosition.z - Math.PI/200;
+    
+    console.log(currentPosition);
+
+    var newPosition = getCartesianCoords(currentPosition);
+    console.log(newPosition);
+    console.log("fim move ESQQ");
+    spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 }
 
 function moveRight() {
-    orbit.rotateX(-deltaTime*3);
+    var currentPosition = getSphericalCoords(spaceEntities[0].position);
+    console.log("inicio move DIRR")
+    console.log(spaceEntities[0].position);
+    console.log(currentPosition);
+    
+    currentPosition.z = currentPosition.z + Math.PI/200;
+    
+    console.log(currentPosition);
+
+    var newPosition = getCartesianCoords(currentPosition);
+    console.log(newPosition);
+    console.log("fim move DIRR");
+    spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 }
 
 
