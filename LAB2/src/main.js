@@ -116,11 +116,47 @@ function rotatePlanet() {
 
 }
 
+function getSphericalCoords(pos) {
+    var x = pos.x;
+    var y = pos.y;
+    var z = pos.z;
+
+    var r = Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2) );
+    var theta = Math.atan( y / x );
+    var phi = Math.atan(Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2)) / z );
+
+    var s = new THREE.Vector3(r, theta, phi);
+    
+    return s;
+}
+
+function getCartesianCoords(pos) {
+    var r = pos.x;
+    var theta = pos.y;
+    var phi = pos.z;
+
+    var x = r * Math.sin(phi) * Math.cos(theta);
+    var y = r * Math.sin(phi) * Math.sin(theta);
+    var z = r * Math.cos(phi);
+    var newPos = new THREE.Vector3(x, y, z);
+    return newPos;
+}
+
 
 function moveForward() {
-    let yx = new THREE.Vector3(spaceEntities[0].position.x, 0,0);
-    yx.normalize();
-    orbit.rotateOnAxis(yx, deltaTime*3);
+    var currentPosition = getSphericalCoords(spaceEntities[0].position);
+    console.log("inicio move")
+    console.log(spaceEntities[0].position);
+    console.log(currentPosition);
+    
+    //currentPosition.z = currentPosition.z + Math.PI/20;
+    //console.log(currentPosition);
+
+    var newPosition = getCartesianCoords(currentPosition);
+    console.log(newPosition);
+    console.log("fim move");
+    //spaceEntities[0].position.set(newPosition);
+    //orbit.rotateOnAxis(yx, deltaTime*3);
 }
 
 function moveBackwards() {
