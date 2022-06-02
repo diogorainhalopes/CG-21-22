@@ -221,10 +221,33 @@ function onKeyUp(e) {
 
 }
 
-
 function render() {
     'use strict';
     renderer.render(scene, camera[indexCamera]);
+}
+
+function update() {
+    var spaceship = spaceEntities[0];
+    var currentQuadrant = spaceship.getQuadrant();
+
+    for (let i = 1; i < spaceEntities.length; i++) {
+        if (spaceEntities[i].getQuadrant() == currentQuadrant) {
+            var dist = spaceEntities[i].position.distanceTo(spaceship.position);
+            var collisionRange = spaceEntities[i].getCollisionRadius() + spaceship.getCollisionRadius();
+
+            if (dist == collisionRange) {
+                // Lixo desaparece
+                spaceEntities[i].visible = false;
+                spaceEntities[i].setCollisionRadius(0);
+            }
+            if (dist < collisionRange) {
+                // TODO: spaceship.position.set()
+                // A posição tem de estar na direção do movimento e verificar dist == collisionRange
+            }
+        }
+    }
+
+    render();
 }
 
 function init() {
@@ -237,7 +260,6 @@ function init() {
 
     clock = new THREE.Clock(true);
     deltaScale = 1;
-
     
     createScene();
     camera[0] = createCameraO(120,0,0);
@@ -267,6 +289,6 @@ function animate() {
     
     camera[2].update();
 
-    render();
+    update();
     requestAnimationFrame(animate);
 }

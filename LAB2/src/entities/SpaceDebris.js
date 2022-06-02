@@ -8,7 +8,8 @@ class SpaceDebris extends SpaceEntity {
         this.createDebris();
 
         this.setCollisionRadius(collisionRadius);
-        scene.add(debris);
+        this.randomPosition();
+        scene.add(this);
         
     }
 
@@ -54,7 +55,7 @@ class SpaceDebris extends SpaceEntity {
             collisionRadius = PLANET_RADIUS/12;
         }
 
-        randomPosition(debris);
+        this.add(debris);
 
     }
 

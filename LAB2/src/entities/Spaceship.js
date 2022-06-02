@@ -11,8 +11,9 @@ class Spaceship extends SpaceEntity {
         this.direction = new THREE.Vector3(Math.cos(-(Math.atan(0))), 
                                            0, 
                                            Math.sin(-(Math.atan(0))));
-                                           
+
         this.setCollisionRadius(this.getTotalHeight());
+        this.randomPosition();
         scene.add(this);
     }
 
@@ -168,7 +169,6 @@ class Spaceship extends SpaceEntity {
 function buildSpaceship(radius) {
     var spaceship;
     spaceship = new Spaceship(radius,name);
-    randomPosition(spaceship);
     spaceEntities.push(spaceship);
 }
 
