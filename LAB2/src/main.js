@@ -5,13 +5,6 @@ var spaceEntities = [];
 var scene, renderer;
 var aspectRatio;
 var viewSize = 150;
-const NUM = 2.1;
-const NEAR = 50;
-const FAR = 1000;
-const PLANET_RADIUS = 50;
-const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
-const PLANET_NAME = "earth";
-const SPACESHIP = "orpheus";
 
 var clock, deltaScale;
 var deltaTime;
@@ -27,6 +20,15 @@ var rightMove = false;
 
 var orbit;
 
+const NUM = 2.1;
+const NEAR = 50;
+const FAR = 1000;
+const PLANET_RADIUS = 50;
+const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
+
+const SPACESHIP_SPEED = Math.PI / 180 * 90 ;
+
+
 function createScene() {
 
     'use strict';
@@ -38,7 +40,7 @@ function createScene() {
 
     buildSpaceship(PLANET_RADIUS);
 
-    CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
+    CreatePlanet(0,0,0,PLANET_RADIUS);    
     CreateRandomDebris();
 
     orbit = new THREE.Object3D();
@@ -143,29 +145,39 @@ function getCartesianCoords(pos) {
 }
 
 
+
 function moveForward() {
+
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move UPPPPP")
+
+    // since our spaceship travels with a constant angular speed 
+    // follows that:
+    // the speed units are: radians / second 
+
+    // currentAngle  = radians / second * second
+    var currrentAngle = SPACESHIP_SPEED * deltaTime;
+    currentPosition.y += currrentAngle;
+    
+    console.log("inicio move UPPPPP");
     console.log(spaceEntities[0].position);
     console.log(currentPosition);
-    
-    currentPosition.y = currentPosition.y + Math.PI/200;
-    
-    console.log(currentPosition);
+
 
     var newPosition = getCartesianCoords(currentPosition);
-    console.log(newPosition);
-    console.log("fim move UPPPPP");
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+
+   
 }
 
 function moveBackwards() {
+
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move DOWN")
+    console.log("inicio move DOWN");
     console.log(spaceEntities[0].position);
     console.log(currentPosition);
-    
-    currentPosition.y = currentPosition.y - Math.PI/200;
+
+    var currrentAngle = SPACESHIP_SPEED * deltaTime;
+    currentPosition.y += -currrentAngle;
     
     console.log(currentPosition);
 
@@ -173,6 +185,7 @@ function moveBackwards() {
     console.log(newPosition);
     console.log("fim move DOWN");
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+
 }
 
 function moveLeft() {
@@ -180,8 +193,10 @@ function moveLeft() {
     console.log("inicio move ESQQ")
     console.log(spaceEntities[0].position);
     console.log(currentPosition);
-    
-    currentPosition.z = currentPosition.z - Math.PI/200;
+
+    var currrentAngle = SPACESHIP_SPEED * deltaTime;
+    currentPosition.z += -currrentAngle;
+
     
     console.log(currentPosition);
 
@@ -189,6 +204,7 @@ function moveLeft() {
     console.log(newPosition);
     console.log("fim move ESQQ");
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+   
 }
 
 function moveRight() {
@@ -196,8 +212,11 @@ function moveRight() {
     console.log("inicio move DIRR")
     console.log(spaceEntities[0].position);
     console.log(currentPosition);
+
+    var currrentAngle = SPACESHIP_SPEED * deltaTime;
+    currentPosition.z += currrentAngle;
     
-    currentPosition.z = currentPosition.z + Math.PI/200;
+
     
     console.log(currentPosition);
 
@@ -205,6 +224,7 @@ function moveRight() {
     console.log(newPosition);
     console.log("fim move DIRR");
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+    
 }
 
 
