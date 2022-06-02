@@ -3,13 +3,13 @@ var clouds;
 
 class Planet extends SpaceEntity  {
 
-    constructor(x,y,z,radius,name) {
+    constructor(x,y,z,radius) {
 
         super();
 
         this.createCosmicBody(radius);
         this.setRadius(radius);
-        this.setType(name);
+    
 
     }
 
@@ -44,16 +44,6 @@ class Planet extends SpaceEntity  {
 
     setRadius(radius) {
         this.radius = radius;
-    
-    }
-
-    getType() {
-        return this.name;
-    
-    }
-
-    setType(name) {
-        this.name = name;
     
     }
 
