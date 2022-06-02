@@ -228,6 +228,7 @@ function render() {
 
 function update() {
     var spaceship = spaceEntities[0];
+    spaceship.computeQuadrant();
     var currentQuadrant = spaceship.getQuadrant();
 
     for (let i = 1; i < spaceEntities.length; i++) {
