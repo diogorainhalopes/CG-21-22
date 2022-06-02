@@ -324,7 +324,7 @@ function update() {
     var currentQuadrant = spaceship.getQuadrant();
 
     for (let i = 1; i < spaceEntities.length; i++) {
-        if (spaceEntities[i].getQuadrant() == currentQuadrant) {
+        if (spaceEntities[i].getQuadrant() == currentQuadrant && spaceEntities[i].getCollisionRadius() != 0) {
             var dist = spaceEntities[i].position.distanceTo(spaceship.position);
             var collisionRange = spaceEntities[i].getCollisionRadius() + spaceship.getCollisionRadius();
 
