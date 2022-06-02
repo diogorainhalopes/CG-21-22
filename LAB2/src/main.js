@@ -20,6 +20,13 @@ var lateralAng = false;
 var defaultAng = false;
 var planetRotation = false;
 
+var forwardMove = false;
+var backwardMove = false;
+var leftMove = false;
+var rightMove = false;
+
+var orbit;
+
 function createScene() {
 
     'use strict';
@@ -33,6 +40,11 @@ function createScene() {
 
     CreatePlanet(0,0,0,PLANET_RADIUS,PLANET_NAME);    
     CreateRandomDebris();
+
+    orbit = new THREE.Object3D();
+    orbit.add(spaceEntities[0]);
+    orbit.position.set(0, 0, 0);
+    scene.add(orbit);
 }
 
 function createCameraO(x,y,z) {
@@ -104,6 +116,27 @@ function rotatePlanet() {
 
 }
 
+
+function moveForward() {
+    let yx = new THREE.Vector3(spaceEntities[0].position.x, 0,0);
+    yx.normalize();
+    orbit.rotateOnAxis(yx, deltaTime*3);
+}
+
+function moveBackwards() {
+    orbit.rotateY(-deltaTime*3);
+}
+
+function moveLeft() {
+    orbit.rotateX(deltaTime*3);
+}
+
+function moveRight() {
+    orbit.rotateX(-deltaTime*3);
+}
+
+
+
 function switchCamera() {
     'use strict'
     camera[indexCamera].lookAt(scene.position);
@@ -141,6 +174,18 @@ function onKeyDown(e) {
         case 87:
             planetRotation = !planetRotation;
             break;
+        case 38: // UP
+            forwardMove = true;
+            break;
+        case 40: // down
+            backwardMove = true;
+            break;
+        case 37: // left
+            leftMove = true;
+            break;
+        case 39: // right
+            rightMove = true;
+            break;
     }
 
 }
@@ -158,6 +203,18 @@ function onKeyUp(e) {
             break;
         case 51: // 3
             lateralAng = false;
+            break;
+        case 38: // up
+            forwardMove = false;
+            break;
+        case 40: // down
+            backwardMove = false;
+            break;
+        case 37: // left
+            leftMove = false;
+            break;
+        case 39:  // right
+            rightMove = false;
             break;
 
     }
@@ -203,6 +260,10 @@ function animate() {
     if(lateralAng) { switchCamera(); };
     if(defaultAng) { switchCamera(); };
     if(planetRotation) { rotatePlanet(); };
+    if(forwardMove) { moveForward(); };
+    if(backwardMove) { moveBackwards(); };
+    if(leftMove) { moveLeft(); };
+    if(rightMove) { moveRight(); };
     
     camera[2].update();
 
