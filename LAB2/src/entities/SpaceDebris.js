@@ -16,9 +16,6 @@ class SpaceDebris extends SpaceEntity {
     }
 
     createDebris() {
-        var max = 4;
-        var min = 1;
-
         var randomColor = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
         var randomShape = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
         var randomWire = Math.random() < 0.5
@@ -72,8 +69,6 @@ class SpaceDebris extends SpaceEntity {
 }
     
 function CreateDebris() {
-    var spacedebris;
-    spacedebris = new SpaceDebris();
-    spaceEntities.push(spacedebris);
+    spaceEntities.push(new SpaceDebris());
 
 }

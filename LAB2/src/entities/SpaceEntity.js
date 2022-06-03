@@ -50,9 +50,5 @@ class SpaceEntity extends THREE.Object3D {
         this.lookAt(0, 0, 0);
         this.computeQuadrant();
     }
-
-    create() {
         
-    }
-    
 }

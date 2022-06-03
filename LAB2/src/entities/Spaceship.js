@@ -16,13 +16,11 @@ class Spaceship extends SpaceEntity {
     }
 
     setup(radius) {
-
         this.setTotalHeight(radius);
         this.setBoosterRadius();
         this.setBodyHeight();
         this.setNoseHeight();
         this.setBoostersHeight();
-        this.setInfo();
 
     }
 
@@ -82,16 +80,6 @@ class Spaceship extends SpaceEntity {
     setBoostersHeight() {
         this.boostersHeight = 1/4* this.getTotalHeight();
 
-    }
-
-    getInfo() {
-        return this.name
-    
-    }
-
-    setInfo(name) {
-        this.name = name;
-   
     }
 
     assemble() {
@@ -173,9 +161,7 @@ class Spaceship extends SpaceEntity {
 }
 
 function buildSpaceship(radius) {
-    var spaceship;
-    spaceship = new Spaceship(radius,name);
-    spaceEntities.push(spaceship);
+    spaceEntities.push(new Spaceship(radius));
 }
 
 function updateMaterialWire() {

@@ -55,8 +55,6 @@ class Planet extends SpaceEntity  {
 }
 
 function CreatePlanet(x,y,z,radius) {
-    var planet;
-    planet = new Planet(x,y,z,radius);
-    spaceEntities.push(planet);
+    spaceEntities.push(new Planet(x,y,z,radius));
 
 }
