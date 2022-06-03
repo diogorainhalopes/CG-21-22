@@ -18,7 +18,7 @@ var backwardMove = false;
 var leftMove = false;
 var rightMove = false;
 
-var orbit;
+var Desl = new THREE.Vector3();
 
 const NUM = 2.1;
 const NEAR = 50;
@@ -43,10 +43,7 @@ function createScene() {
     CreatePlanet(0,0,0,PLANET_RADIUS);    
     CreateRandomDebris();
 
-    orbit = new THREE.Object3D();
-    orbit.add(spaceEntities[0]);
-    orbit.position.set(0, 0, 0);
-    scene.add(orbit);
+    
 }
 
 function createCameraO(x,y,z) {
@@ -147,7 +144,7 @@ function getCartesianCoords(pos) {
 
 
 function moveForward() {
-
+    var oldP = spaceEntities[0].position;
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
     // since our spaceship travels with a constant angular speed 
@@ -165,7 +162,10 @@ function moveForward() {
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+    
 
+    Desl.subVectors(spaceEntities[0].position ,oldP);
+    //spaceEntities[0].lookAt(Desl);
    
 }
 
