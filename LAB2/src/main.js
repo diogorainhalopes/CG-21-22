@@ -145,8 +145,8 @@ function movDirection() {
 }
 
 function moveForward() {
-    var oldP = new THREE.Vector3(0 ,0, 0);
-    oldP.copy(spaceEntities[0].position);
+    spaceEntities[0].setOldPosition();
+    var oldP = spaceEntities[0].getOldPosition();
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
     
@@ -170,13 +170,13 @@ function moveForward() {
     //Desl.add(spaceEntities[0].position)
     
     
-    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
    
 }
 
 function moveBackwards() {
-    var oldP = new THREE.Vector3(0 ,0, 0);
-    oldP.copy(spaceEntities[0].position);
+    spaceEntities[0].setOldPosition();
+    var oldP = spaceEntities[0].getOldPosition();
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
@@ -190,12 +190,12 @@ function moveBackwards() {
 
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 
-    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
 }
 
 function moveLeft() {
-    var oldP = new THREE.Vector3(0 ,0, 0);
-    oldP.copy(spaceEntities[0].position);
+    spaceEntities[0].setOldPosition();
+    var oldP = spaceEntities[0].getOldPosition();
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
@@ -209,13 +209,13 @@ function moveLeft() {
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 
-    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
    
 }
 
 function moveRight() {
-    var oldP = new THREE.Vector3(0 ,0, 0);
-    oldP.copy(spaceEntities[0].position);
+    spaceEntities[0].setOldPosition();
+    var oldP = spaceEntities[0].getOldPosition();
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
@@ -231,7 +231,7 @@ function moveRight() {
 
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 
-    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
     
 }
 
@@ -342,6 +342,8 @@ function update() {
                 spaceEntities[i].setCollisionRadius(0);
             }
             if (dist < collisionRange) {
+                spaceship.position.subVectors(spaceship.position, spaceship.direction.multiplyScalar(collisionRange-dist));
+
                 spaceEntities[i].setRemoved(true);
             } 
         }

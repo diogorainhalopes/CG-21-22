@@ -26,11 +26,9 @@ class Spaceship extends SpaceEntity {
 
     }
 
-    getShipDirection(oldP) {
-        var oldP = new THREE.Vector3(0 ,0, 0);
-        oldP.copy(this.position);
+    getShipDirection() {
 
-        this.direction.subVectors(oldP, this.position);
+        this.direction.subVectors(this.oldPosition, this.position);
         this.direction.normalize();
         return this.direction;
         

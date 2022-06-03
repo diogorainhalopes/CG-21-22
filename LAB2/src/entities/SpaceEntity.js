@@ -7,6 +7,7 @@ class SpaceEntity extends THREE.Object3D {
         super();
 
         this.position.set(x,y,z);
+        this.oldPosition = new THREE.Vector3(0 ,0, 0);
         
     }
 
@@ -20,6 +21,14 @@ class SpaceEntity extends THREE.Object3D {
 
     getCollisionRadius() {
         return this.collisionRadius;
+    }
+
+    getOldPosition() {
+        return this.oldPosition;
+    }
+
+    setOldPosition() {
+        this.oldPosition.copy(this.position);
     }
 
     setCollisionRadius(radius) {
