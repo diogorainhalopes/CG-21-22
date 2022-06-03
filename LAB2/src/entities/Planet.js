@@ -1,5 +1,5 @@
-var cosmicBody;
-var clouds;
+"use strict";
+var cosmicBody, clouds;
 
 class Planet extends SpaceEntity  {
 

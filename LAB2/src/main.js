@@ -1,4 +1,5 @@
 /*global THREE, requestAnimationFrame, console*/
+"use strict";
 var scene, render;
 var camera = [] , indexCamera = 0;
 var spaceEntities = [];
