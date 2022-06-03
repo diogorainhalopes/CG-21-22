@@ -8,10 +8,8 @@ class Spaceship extends SpaceEntity {
 
         this.setup(radius);
         this.assemble();
-        this.direction = new THREE.Vector3(Math.cos(-(Math.atan(Desl.x))), 
-                                           0, 
-                                           Math.sin(-(Math.atan(Desl.z))));
-
+        this.direction = new THREE.Vector3();
+        
         this.setCollisionRadius(this.getTotalHeight());
         this.randomPosition();
         scene.add(this);
@@ -26,6 +24,16 @@ class Spaceship extends SpaceEntity {
         this.setBoostersHeight();
         this.setInfo();
 
+    }
+
+    getShipDirection(oldP) {
+        var oldP = new THREE.Vector3(0 ,0, 0);
+        oldP.copy(this.position);
+
+        this.direction.subVectors(oldP, this.position);
+        this.direction.normalize();
+        return this.direction;
+        
     }
 
     getTotalHeight() {

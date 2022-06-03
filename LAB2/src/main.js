@@ -18,7 +18,7 @@ var backwardMove = false;
 var leftMove = false;
 var rightMove = false;
 
-var Desl = new THREE.Vector3();
+
 
 const NUM = 2.1;
 const NEAR = 50;
@@ -110,7 +110,6 @@ function onResize() { // FIX ME resize da persp cam mal
 
 function rotatePlanet() {
     'use strict'
-    console.log("entrei na rotação");
     spaceEntities[1].rotateItself(deltaTime/2);
 
 }
@@ -141,11 +140,16 @@ function getCartesianCoords(pos) {
     return newPos;
 }
 
+function movDirection() {
 
+}
 
 function moveForward() {
-    var oldP = spaceEntities[0].position;
+    var oldP = new THREE.Vector3(0 ,0, 0);
+    oldP.copy(spaceEntities[0].position);
+
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
+    
 
     // since our spaceship travels with a constant angular speed 
     // follows that:
@@ -155,26 +159,27 @@ function moveForward() {
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.y += currrentAngle;
     
-    console.log("inicio move UPPPPP");
-    console.log(spaceEntities[0].position);
+    
     console.log(currentPosition);
-
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
     
 
-    Desl.subVectors(spaceEntities[0].position ,oldP);
-    //spaceEntities[0].lookAt(Desl);
+    //Desl.sub(oldP);
+    //Desl.add(spaceEntities[0].position)
+    
+    
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
    
 }
 
 function moveBackwards() {
+    var oldP = new THREE.Vector3(0 ,0, 0);
+    oldP.copy(spaceEntities[0].position);
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move DOWN");
-    console.log(spaceEntities[0].position);
-    console.log(currentPosition);
+
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.y += -currrentAngle;
@@ -182,17 +187,18 @@ function moveBackwards() {
     console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
-    console.log(newPosition);
-    console.log("fim move DOWN");
+
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
 
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
 }
 
 function moveLeft() {
+    var oldP = new THREE.Vector3(0 ,0, 0);
+    oldP.copy(spaceEntities[0].position);
+
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move ESQQ")
-    console.log(spaceEntities[0].position);
-    console.log(currentPosition);
+
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.z += -currrentAngle;
@@ -201,17 +207,18 @@ function moveLeft() {
     console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
-    console.log(newPosition);
-    console.log("fim move ESQQ");
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
    
 }
 
 function moveRight() {
+    var oldP = new THREE.Vector3(0 ,0, 0);
+    oldP.copy(spaceEntities[0].position);
+
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
-    console.log("inicio move DIRR")
-    console.log(spaceEntities[0].position);
-    console.log(currentPosition);
+
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.z += currrentAngle;
@@ -221,9 +228,10 @@ function moveRight() {
     console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
-    console.log(newPosition);
-    console.log("fim move DIRR");
+
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
+
+    spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection(oldP)));
     
 }
 

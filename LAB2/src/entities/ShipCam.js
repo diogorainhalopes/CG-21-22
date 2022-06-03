@@ -27,6 +27,7 @@ class ShipCam extends THREE.PerspectiveCamera {
             camCart.y,
             camCart.z
         );
+        
         this.lookAt(0,0,0);
     }
 
