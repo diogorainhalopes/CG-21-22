@@ -18,16 +18,12 @@ var backwardMove = false;
 var leftMove = false;
 var rightMove = false;
 
-
-
 const NUM = 2.1;
 const NEAR = 50;
 const FAR = 1000;
 const PLANET_RADIUS = 50;
 const ORBIT_LENGTH = 1.20 * PLANET_RADIUS;
-
 const SPACESHIP_SPEED = Math.PI / 180 * 90 ;
-
 
 function createScene() {
 
@@ -39,10 +35,8 @@ function createScene() {
 
 
     buildSpaceship(PLANET_RADIUS);
-
-    CreatePlanet(0,0,0,PLANET_RADIUS);    
-    CreateRandomDebris();
-
+    createPlanet(0,0,0,PLANET_RADIUS);    
+    createRandomDebris();
     
 }
 
@@ -63,6 +57,7 @@ function createCameraO(x,y,z) {
     camera.position.set(x,y,z);
     camera.lookAt(scene.position);
     return camera;
+
 }
 
 function createCameraP(x,y,z) {
@@ -74,15 +69,17 @@ function createCameraP(x,y,z) {
     camera.position.set(x,y,z);
     camera.lookAt(scene.position);
     return camera;
+
 }
 
 
 
-function CreateRandomDebris() {
+function createRandomDebris() {
     'use strict';
     for (let i = 0; i < 22; i++) {
         CreateDebris();
     }
+
 }
 
 function onResize(){
@@ -98,6 +95,7 @@ function onResize(){
       resizePerspective();
 
     }
+
 }
 
 function resizeOrthographic(){
@@ -114,17 +112,19 @@ function resizeOrthographic(){
         renderer.setSize(window.innerWidth, window.innerHeight);
 
     }
-  }
+
+}
   
-  function resizePerspective(){
+function resizePerspective() {
+
     if((window.innerWidth / window.innerHeight) < ratio) {
         camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
         camera[indexCamera].updateProjectionMatrix();
         camera[indexCamera].lookAt(scene.position);
 
     }
-  }
 
+}
 
 function rotatePlanet() {
     'use strict'
@@ -142,9 +142,10 @@ function getSphericalCoords(pos) {
     var phi = Math.atan2( y , x );
     var theta = Math.acos(z / r);
 
-    var s = new THREE.Vector3(r, phi, theta);
+    var spherical = new THREE.Vector3(r, phi, theta);
     
-    return s;
+    return spherical;
+
 }
 
 function getCartesianCoords(pos) {
@@ -156,8 +157,10 @@ function getCartesianCoords(pos) {
     var x = r * Math.sin(theta) * Math.cos(phi);
     var y = r * Math.sin(theta) * Math.sin(phi);
     var z = r * Math.cos(theta);
-    var newPos = new THREE.Vector3(x, y, z);
-    return newPos;
+    var cartesian = new THREE.Vector3(x, y, z);
+
+    return cartesian;
+
 }
 
 // since our spaceship travels with a constant angular speed 
@@ -166,41 +169,33 @@ function getCartesianCoords(pos) {
 // currentAngle  = radians / second * second
 function moveForward() {
     'use strict';
+
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
-
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
     
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.y += currrentAngle;
-    
-    
-    console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
-
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
    
 }
 
 function moveBackwards() {
     'use strict';
+
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
-
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.y += -currrentAngle;
     
-    console.log(currentPosition);
-
     var newPosition = getCartesianCoords(currentPosition);
-
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
-
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
 }
 
@@ -214,16 +209,13 @@ function moveLeft() {
 
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
-    if(currentPosition.y >= 0) { //hem nort
+    if(currentPosition.y >= 0) { //northern hemisphere
         currentPosition.z -= currrentAngle;
 
     }
     else {
         currentPosition.z += currrentAngle;   
     }
-    
-    //currentPosition.z = Math.abs(currentPosition.z);
-    //console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
@@ -233,9 +225,9 @@ function moveLeft() {
 
 function moveRight() {
     'use strict';
+
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
-
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
 
 
@@ -248,21 +240,11 @@ function moveRight() {
         currentPosition.z -= currrentAngle;
     }
 
-    //currentPosition.z = Math.abs(currentPosition.z);
-    //console.log(currentPosition);
-    
-    console.log(currentPosition);
-
     var newPosition = getCartesianCoords(currentPosition);
-
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
-
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
     
 }
-
-
-
 
 function switchCamera() {
     'use strict'
@@ -364,7 +346,7 @@ function update() {
             var collisionRange = spaceEntities[i].getCollisionRadius() + spaceship.getCollisionRadius();
 
             if (spaceEntities[i].getRemoved()) {
-                // Lixo desaparece
+                // space debris vanishes
                 spaceEntities[i].visible = false;
                 spaceEntities[i].setCollisionRadius(0);
             }
@@ -384,6 +366,7 @@ function update() {
 }
 
 function init() {
+
     'use strict';
     renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -407,6 +390,7 @@ function init() {
 }
 
 function animate() {
+
     'use strict';
 
     deltaTime = clock.getDelta() * deltaScale;

@@ -30,9 +30,7 @@ class ShipCam extends THREE.PerspectiveCamera {
             camCart.z
         );
         dir.copy(this.ship.direction);
-        v3.subVectors(this.ship.position, dir.multiplyScalar(10) );
-        //this.position.subVectors(this.position, this.ship.direction);
-        //v3.add(this.ship.direction);
+        v3.subVectors(this.ship.position, dir.multiplyScalar(10));
         this.lookAt(v3);
     }
 
