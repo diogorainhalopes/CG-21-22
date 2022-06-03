@@ -79,34 +79,52 @@ function createCameraP(x,y,z) {
 
 
 function CreateRandomDebris() {
+    'use strict';
     for (let i = 0; i < 22; i++) {
         CreateDebris();
     }
 }
 
-function onResize() { // FIX ME resize da persp cam mal
+function onResize(){
     'use strict';
 
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    if (indexCamera == 0){  
+        resizeOrthographic();
+
+    }
+    else{
+      resizePerspective();
+
+    }
+}
+
+function resizeOrthographic(){
     aspectRatio = window.innerWidth / window.innerHeight;
+    
     if (window.innerHeight > 0 && window.innerWidth > 0) {
-
-        if (window.innerWidth === 0 || window.innerHeight === 0) {
-            return;
-        }
-            
-        camera[indexCamera].right = viewSize * aspectRatio / 2;
-        camera[indexCamera].left = -camera[indexCamera].right;
-
-        camera[indexCamera].top = viewSize / 2;
-        camera[indexCamera].bottom = -camera[indexCamera].top;
-
-        camera[indexCamera].updateProjectionMatrix();
+        
+        camera.right = viewSize * aspectRatio / 2;
+        camera.left = -camera.right;
+        camera.top = viewSize / 2;
+        camera.bottom = -camera.top;
+        camera.updateProjectionMatrix();
 
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.updateProjectionMatrix();
+
     }
-    
-}
+  }
+  
+  function resizePerspective(){
+    if((window.innerWidth / window.innerHeight) < ratio) {
+        camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
+        camera[indexCamera].updateProjectionMatrix();
+        camera[indexCamera].lookAt(scene.position);
+
+    }
+  }
+
 
 function rotatePlanet() {
     'use strict'
@@ -115,6 +133,7 @@ function rotatePlanet() {
 }
 
 function getSphericalCoords(pos) {
+    'use strict';
     var x = pos.x;
     var y = pos.y;
     var z = pos.z;
@@ -129,6 +148,7 @@ function getSphericalCoords(pos) {
 }
 
 function getCartesianCoords(pos) {
+    'use strict';
     var r = pos.x;
     var phi = pos.y;
     var theta = pos.z;
@@ -140,20 +160,17 @@ function getCartesianCoords(pos) {
     return newPos;
 }
 
-
-
+// since our spaceship travels with a constant angular speed 
+// follows that:
+// the speed units are: radians / second 
+// currentAngle  = radians / second * second
 function moveForward() {
+    'use strict';
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
 
     var currentPosition = getSphericalCoords(spaceEntities[0].position);
     
-
-    // since our spaceship travels with a constant angular speed 
-    // follows that:
-    // the speed units are: radians / second 
-
-    // currentAngle  = radians / second * second
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
     currentPosition.y += currrentAngle;
     
@@ -168,6 +185,7 @@ function moveForward() {
 }
 
 function moveBackwards() {
+    'use strict';
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
 
@@ -186,7 +204,9 @@ function moveBackwards() {
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
 }
 
+
 function moveLeft() {
+    'use strict';
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
 
@@ -207,12 +227,12 @@ function moveLeft() {
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
-
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
    
 }
 
 function moveRight() {
+    'use strict';
     spaceEntities[0].setOldPosition();
     var oldP = spaceEntities[0].getOldPosition();
 
