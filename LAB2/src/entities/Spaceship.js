@@ -127,6 +127,7 @@ class Spaceship extends SpaceEntity {
 
         var booster = new THREE.Mesh(geometry,material);
 
+        booster.rotateX(0);
         booster.rotateY(0);
     	booster.rotateZ(90 * Math.PI / 180);
         if(mode == "length") {
