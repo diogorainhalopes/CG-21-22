@@ -1,5 +1,5 @@
-"use strict";
-var cosmicBody, clouds;
+var cosmicBody;
+var clouds;
 
 class Planet extends SpaceEntity  {
 
@@ -15,9 +15,9 @@ class Planet extends SpaceEntity  {
 
     createCosmicBody(radius) {
         
-        const geometry = new THREE.SphereGeometry(radius-2,50,50);
+        const geometry = new THREE.SphereGeometry(radius-0.7,50,50);
         const material = new THREE.MeshBasicMaterial({ 
-            map: new THREE.TextureLoader().load("images/earthnight.jpg"),
+            map: new THREE.TextureLoader().load("images/earth.jpg"),
             //color: "blue"
         });
         cosmicBody = new THREE.Mesh(geometry,material);
@@ -55,6 +55,8 @@ class Planet extends SpaceEntity  {
 }
 
 function CreatePlanet(x,y,z,radius) {
-    spaceEntities.push(new Planet(x,y,z,radius));
+    var planet;
+    planet = new Planet(x,y,z,radius);
+    spaceEntities.push(planet);
 
 }

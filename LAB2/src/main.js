@@ -1,5 +1,4 @@
 /*global THREE, requestAnimationFrame, console*/
-"use strict";
 var scene, render;
 var camera = [] , indexCamera = 0;
 var spaceEntities = [];
@@ -141,9 +140,7 @@ function getCartesianCoords(pos) {
     return newPos;
 }
 
-function movDirection() {
 
-}
 
 function moveForward() {
     spaceEntities[0].setOldPosition();
@@ -165,12 +162,7 @@ function moveForward() {
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
-    
 
-    //Desl.sub(oldP);
-    //Desl.add(spaceEntities[0].position)
-    
-    
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
    
 }
@@ -202,10 +194,16 @@ function moveLeft() {
 
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
-    currentPosition.z += -currrentAngle;
+    if(currentPosition.y >= 0) { //hem nort
+        currentPosition.z -= currrentAngle;
 
+    }
+    else {
+        currentPosition.z += currrentAngle;   
+    }
     
-    console.log(currentPosition);
+    //currentPosition.z = Math.abs(currentPosition.z);
+    //console.log(currentPosition);
 
     var newPosition = getCartesianCoords(currentPosition);
     spaceEntities[0].position.set(newPosition.x, newPosition.y, newPosition.z);
@@ -222,9 +220,16 @@ function moveRight() {
 
 
     var currrentAngle = SPACESHIP_SPEED * deltaTime;
-    currentPosition.z += currrentAngle;
     
+    if(currentPosition.y >= 0) {
+        currentPosition.z += currrentAngle;
+    }
+    else {
+        currentPosition.z -= currrentAngle;
+    }
 
+    //currentPosition.z = Math.abs(currentPosition.z);
+    //console.log(currentPosition);
     
     console.log(currentPosition);
 
@@ -235,6 +240,7 @@ function moveRight() {
     spaceEntities[0].lookAt(oldP.add(spaceEntities[0].getShipDirection()));
     
 }
+
 
 
 
@@ -344,7 +350,11 @@ function update() {
             }
             if (dist < collisionRange) {
                 spaceship.position.subVectors(spaceship.position, spaceship.direction.multiplyScalar(collisionRange-dist));
-
+                var setRad = getSphericalCoords(spaceship.position);
+                setRad.x = ORBIT_LENGTH;
+                var newPos = getCartesianCoords(setRad);
+                spaceship.position.set(newPos.x, newPos.y, newPos.z);
+                
                 spaceEntities[i].setRemoved(true);
             } 
         }

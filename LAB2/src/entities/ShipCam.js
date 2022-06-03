@@ -18,17 +18,22 @@ class ShipCam extends THREE.PerspectiveCamera {
 
         let vector = new THREE.Vector3(0, 0, 0);
         this.ship.getWorldPosition(vector);
+        let v3 = new THREE.Vector3(0, 0, 0);
+        let dir = new THREE.Vector3();
         
         var shipPosition = getSphericalCoords(this.ship.position);
-        shipPosition.x += 40;
+        shipPosition.x += 30;
         var camCart = getCartesianCoords(shipPosition) 
         this.position.set(  
             camCart.x,
             camCart.y,
             camCart.z
         );
-        
-        this.lookAt(0,0,0);
+        dir.copy(this.ship.direction);
+        v3.subVectors(this.ship.position, dir.multiplyScalar(10) );
+        //this.position.subVectors(this.position, this.ship.direction);
+        //v3.add(this.ship.direction);
+        this.lookAt(v3);
     }
 
     resize() {
