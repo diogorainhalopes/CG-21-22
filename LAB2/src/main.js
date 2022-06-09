@@ -11,7 +11,7 @@ var deltaTime;
 var topAng = false;
 var lateralAng = false;
 var defaultAng = false;
-var planetRotation = false;
+var planetRotation = true;
 
 var forwardMove = false;
 var backwardMove = false;
