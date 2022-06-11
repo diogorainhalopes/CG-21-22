@@ -13,12 +13,14 @@ var topAng = false;
 var lateralAng = false;
 var defaultAng = false;
 
-var origamiFirstClockwise = false;
-var origamiFirstCounterclockwise = false
-var origamiSecondClockwise = false;
-var origamiSecondCounterclockwise = false
-var origamiThirdClockwise = false;
-var origamiThirdCounterclockwise = false
+var phase1Rot = false;
+var phase2Rot = false;
+var phase3Rot = false;
+
+var phase1Dir = false;
+var phase2Dir = false;
+var phase3Dir = false;
+
 
 var directLight, dlHelper, dlHelper2;
 
@@ -114,6 +116,37 @@ function resizePerspective() {
 }
 
 
+function rotatePhase1() {
+    'use strict'
+    if(phase1Dir) {
+        phase1.rotateItself(deltaTime*2);
+    }
+    else {
+        phase1.rotateItself(-deltaTime*2);;
+    }
+}
+
+function rotatePhase2() {
+    'use strict'
+    if(phase2Dir) {
+        phase2.rotateItself(deltaTime*2);
+    }
+    else {
+        phase2.rotateItself(-deltaTime*2);;
+    }
+}
+
+function rotatePhase3() {
+    'use strict'
+    if(phase3Dir) {
+        phase3.rotateItself(deltaTime*2);
+    }
+    else {
+        phase3.rotateItself(-deltaTime*2);;
+    }
+}
+
+
 
 
 function switchCamera() {
@@ -140,27 +173,33 @@ function onKeyDown(e) {
             break;
         case 113: // q
         case 81:
-                origamiFirstCounterclockwise = true;
-                break;
+            phase1Rot = true;
+            phase1Dir = true;
+            break;
         case 119: // w
         case 87:
-            origamiFirstClockwise = true;
+            phase1Rot = true;
+            phase1Dir = false;
             break;
         case 101: // e
         case 69: 
-            origamiSecondClockwise = true;
+            phase2Rot = true;
+            phase2Dir = true;
             break;
         case 114: // r
         case 82:
-            origamiSecondCounterclockwise = true;
+            phase2Rot = true;
+            phase2Dir = false;
             break;
         case 116: // t
         case 84:
-            origamiThirdClockwise = true;
+            phase3Rot = true;
+            phase3Dir = true;
             break;
         case 121: // y
         case 89:
-            origamiThirdCounterclockwise = true;
+            phase3Rot = true;
+            phase3Dir = false;
             break;
         case 97: // a 
         case 65:
@@ -204,56 +243,55 @@ function onKeyUp(e) {
         case 51: // 3
             lateralAng = false;
             break;
-            case 119: // w
-            case 87:
-                origamiFirstClockwise = false;
-                break;
-            case 113: // q
-            case 81:
-                origamiFirstCounterclockwise = false;
-                break;
-            case 101: // e
-            case 69: 
-                origamiSecondClockwise = false;
-                break;
-            case 114: // r
-            case 82:
-                origamiSecondCounterclockwise = false;
-                break;
-            case 116: // t
-            case 84:
-                origamiThirdClockwise = false;
-                break;
-            case 121: // y
-            case 89:
-                origamiThirdCounterclockwise = false;
-                break;
-            case 97: // a 
-            case 65:
-                shading = false;
-                break;
-            case 115: // s
-            case 83:
-                lightingCalculation = false;
-                break;
-            case 100: // d
-            case 68:
-                globalLighting = false;
-                break;
-            case 122: // z
-            case 90:
-                spotlightFirst = false;
-                break;
-            case 120: // x
-            case 88: 
-                spotlightSecond = false;
-                break;
-            case 99: // c
-            case 67: 
-                spotlightThird = false;
-                break;
+        case 113: // q
+        case 81:
+            phase1Rot = false;
+            break;
+        case 119: // w
+        case 87:
+            phase1Rot = false;
+            break;
+        case 101: // e
+        case 69: 
+            phase2Rot = false;
+            break;
+        case 114: // r
+        case 82:
+            phase2Rot = false;
+            break;
+        case 116: // t
+        case 84:
+            phase3Rot = false;
+            break;
+        case 121: // y
+        case 89:
+            phase3Rot = false;
+            break;
+        case 97: // a 
+        case 65:
+            shading = false;
+            break;
+        case 115: // s
+        case 83:
+            lightingCalculation = false;
+            break;
+        case 100: // d
+        case 68:
+            globalLighting = false;
+            break;
+        case 122: // z
+        case 90:
+            spotlightFirst = false;
+            break;
+        case 120: // x
+        case 88: 
+            spotlightSecond = false;
+            break;
+        case 99: // c
+        case 67: 
+            spotlightThird = false;
+            break;
     
-
     }
 }
 
@@ -304,6 +342,9 @@ function animate() {
     if(topAng) { switchCamera(); };
     if(lateralAng) { switchCamera(); };
     if(defaultAng) { switchCamera(); };
+    if(phase1Rot) { rotatePhase1(); };
+    if(phase2Rot) { rotatePhase2(); };
+    if(phase3Rot) { rotatePhase3(); };
 
     update();
     render();
