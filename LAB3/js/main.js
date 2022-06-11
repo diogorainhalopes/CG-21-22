@@ -146,6 +146,9 @@ function rotatePhase3() {
     }
 }
 
+function turnGlobalLighting() {
+    directLight.visible = !directLight.visible;
+}
 
 
 
@@ -275,10 +278,10 @@ function onKeyUp(e) {
         case 83:
             lightingCalculation = false;
             break;
-        case 100: // d
+       /*  case 100: // d
         case 68:
             globalLighting = false;
-            break;
+            break; */
         case 122: // z
         case 90:
             spotlightFirst = false;
@@ -345,6 +348,7 @@ function animate() {
     if(phase1Rot) { rotatePhase1(); };
     if(phase2Rot) { rotatePhase2(); };
     if(phase3Rot) { rotatePhase3(); };
+    if(globalLighting) {turnGlobalLighting(); globalLighting=false;}
 
     update();
     render();
