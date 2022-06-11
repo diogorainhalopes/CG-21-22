@@ -20,7 +20,7 @@ var origamiSecondCounterclockwise = false
 var origamiThirdClockwise = false;
 var origamiThirdCounterclockwise = false
 
-var directLight, dlHelper;
+var directLight, dlHelper, dlHelper2;
 
 var globalLighting = false;
 var shading = false;
@@ -30,7 +30,7 @@ var spotlightFirst = false;
 var spotlightSecond = false;
 var spotlightThird = false;
 
-
+var group;
 
 var palanque;
 var floor;
@@ -42,11 +42,13 @@ function createScene() {
     scene = new THREE.Scene();
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-    directLight.position.set(60, 60, 60);
+    directLight.position.set(10, 10, -10);
     dlHelper = new THREE.DirectionalLightHelper(directLight, 3)
+    dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
+    
     directLight.visible = true;
     directLight.castShadow = true;
     
@@ -58,13 +60,28 @@ function createScene() {
     phase2 = new Phase2();
     phase3 = new Phase3();
 
-    
-    scene.add(palanque);
+    group = new THREE.Object3D();
+    group.add(palanque, floor, phase1, phase2, phase3);
+    group.scale.set(0.2, 0.2, 0.2);
+    scene.add(group);
+
+/*     directLight.shadow.camera.left = -25;
+    directLight.shadow.camera.right = 25;
+    directLight.shadow.camera.top = 25;
+    directLight.shadow.camera.bottom = -25; */
+
+    /* scene.add(palanque);
     scene.add(floor);
     scene.add(phase1);
     scene.add(phase2);
-    scene.add(phase3);
-    scene.add(directLight, dlHelper);
+    scene.add(phase3); */
+
+    directLight.shadow.mapSize.width = 1024;
+    directLight.shadow.mapSize.height = 1024;
+
+    directLight.shadow.camera.near = 1;
+    directLight.shadow.camera.far = 1000;
+    scene.add(directLight, dlHelper, dlHelper2);
 }
 
 
@@ -121,13 +138,13 @@ function onKeyDown(e) {
             lateralAng = true;
             indexCamera = 2;
             break;
+        case 113: // q
+        case 81:
+                origamiFirstCounterclockwise = true;
+                break;
         case 119: // w
         case 87:
             origamiFirstClockwise = true;
-            break;
-        case 113: // q
-        case 81:
-            origamiFirstCounterclockwise = true;
             break;
         case 101: // e
         case 69: 
@@ -264,13 +281,13 @@ function init() {
     deltaScale = 1;
     
     createScene();
-    camera[0] = createCameraP(60,60,60);
-    camera[1] = createCameraP(60,0,0);
-    camera[2] = createCameraP(0,60,0);
+    camera[0] = createCameraP(8,8,8);
+    camera[1] = createCameraP(8,8,0);
+    camera[2] = createCameraP(0,15,0);
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
-    camera[indexCamera].position.set(30, 30, 30 );
+    camera[indexCamera].position.set(8, 8, 0);
     controls.update();
 /*      ORBIT CONTROLS      */ 
     window.addEventListener("keydown", onKeyDown);

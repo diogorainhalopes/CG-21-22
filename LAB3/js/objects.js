@@ -21,9 +21,11 @@ class Entity extends THREE.Object3D {
 
     constructor() {
         super();
-        this.receiveShadow = true;
-        this.castShadow = true;
 
+    }
+
+    rotateItself(angle) {
+        this.rotateY(angle);
     }
         
 }
@@ -58,6 +60,8 @@ class Palanque extends Entity {
         
         var leg = new THREE.Mesh(geometry,material);
         leg.position.set(x, y, z);
+        leg.castShadow = true;
+        leg.receiveShadow = true;
         this.add(leg);
     }
 
@@ -67,6 +71,8 @@ class Palanque extends Entity {
         
         var step = new THREE.Mesh(geometry,material);
         step.position.set(x, y, z);
+        step.castShadow = true;
+        step.receiveShadow = true;
         this.add(step);
     }
 
@@ -76,6 +82,8 @@ class Palanque extends Entity {
         
         var base = new THREE.Mesh(geometry,material);
         base.position.set(x, y, z);
+        base.castShadow = true;
+        base.receiveShadow = true;
         this.add(base);
     }
 
@@ -85,6 +93,8 @@ class Palanque extends Entity {
         const material = new THREE.MeshPhongMaterial( { color: "rgb(255, 230, 230)" } );
         var support = new THREE.Mesh(geometry,material);
         support.position.set(x, y, z);
+        support.castShadow = true;
+        support.receiveShadow = true;
         this.add(support);
     }
 }
@@ -97,6 +107,7 @@ class Floor extends Entity {
         const material = new THREE.MeshPhongMaterial({color: "rgb(51, 102, 204)"});
         var floor = new THREE.Mesh(geometry,material);
         floor.rotation.x = - Math.PI / 2;
+        floor.receiveShadow = true;
         this.add(floor);
         //this.position.set(0, 0, 0);
     }
@@ -129,8 +140,10 @@ class Phase1 extends Entity {
         geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
         geometry.computeVertexNormals()
         var material = new THREE.MeshPhongMaterial( { color: "white" , side : THREE.DoubleSide} );
-        
-        this.add(new THREE.Mesh( geometry, material ));
+        var phase1 = new THREE.Mesh( geometry, material );
+        phase1.castShadow = true;
+        phase1.receiveShadow = true;
+        this.add(phase1);
     }
 
 }
@@ -188,8 +201,10 @@ class Phase2 extends Entity {
         geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
         geometry.computeVertexNormals()
         var material = new THREE.MeshPhongMaterial( { color: "white" , side : THREE.DoubleSide} );
-        
-        this.add(new THREE.Mesh( geometry, material ));
+        var phase2 = new THREE.Mesh( geometry, material );
+        phase2.castShadow = true;
+        phase2.receiveShadow = true;
+        this.add(phase2);
     }
 
 }
@@ -312,17 +327,17 @@ class Phase3 extends Entity {
 
 
         // itemSize = 3 because there are 3 values (components) per vertex
-        var BFG = new THREE.BufferAttribute( vertices, 3 )
-        geometry.setAttribute( 'position', BFG);
+        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ));
        // geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
         geometry.computeVertexNormals();
         
-        var material = new THREE.MeshPhongMaterial( { color: "lightgrey",
+        var material = new THREE.MeshPhongMaterial( { color: "white",
                                                     //map: new THREE.TextureLoader().load("azulejos.jpg"),
                                                     side : THREE.DoubleSide} );
-
-        BFG
-        this.add(new THREE.Mesh( geometry, material ));
+        var phase3 = new THREE.Mesh( geometry, material );
+        phase3.castShadow = true;
+        phase3.receiveShadow = true;
+        this.add(phase3);
     }
 
 }
