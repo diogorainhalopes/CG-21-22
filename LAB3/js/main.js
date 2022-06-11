@@ -1,5 +1,6 @@
 
 /*global THREE, requestAnimationFrame, console*/
+
 var scene, render;
 var camera = [] , indexCamera = 0;
 var scene, renderer;
@@ -19,6 +20,8 @@ var origamiSecondCounterclockwise = false
 var origamiThirdClockwise = false;
 var origamiThirdCounterclockwise = false
 
+var directLight, dlHelper;
+
 var globalLighting = false;
 var shading = false;
 var lightingCalculation = false;
@@ -28,10 +31,10 @@ var spotlightSecond = false;
 var spotlightThird = false;
 
 
-const FLOOR_HEIGHT = 0.5;
 
 var palanque;
 var floor;
+var phase1, phase2, phase3;
 
 function createScene() {
 
@@ -39,12 +42,29 @@ function createScene() {
     scene = new THREE.Scene();
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
 
-    palanque = new Palanque();
-    floor = new Floor();
-    scene.add(palanque);
-    scene.add(floor);
+    directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+    directLight.position.set(50, 50, 0);
+    dlHelper = new THREE.DirectionalLightHelper(directLight, 3)
+    directLight.visible = true;
+    directLight.castShadow = true;
     
+
+
+    //palanque = new Palanque();
+    floor = new Floor();
+    //phase1 = new Phase1();
+    //phase2 = new Phase2();
+    phase3 = new Phase3();
+
+    
+    //scene.add(palanque);
+    scene.add(floor);
+    //scene.add(phase1);
+    //scene.add(phase2);
+    scene.add(phase3);
+    scene.add(directLight, dlHelper);
 }
 
 
@@ -236,6 +256,8 @@ function init() {
         antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+   // renderer.setClearColor("lightblue");
     document.body.appendChild(renderer.domElement);
 
     clock = new THREE.Clock(true);
@@ -248,7 +270,7 @@ function init() {
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
-    camera[indexCamera].position.set(0,20,100 );
+    camera[indexCamera].position.set(6, 4, 4 );
     controls.update();
 /*      ORBIT CONTROLS      */ 
     window.addEventListener("keydown", onKeyDown);

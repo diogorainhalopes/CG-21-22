@@ -17,14 +17,14 @@ class Planet extends SpaceEntity  {
         
         const geometry = new THREE.SphereGeometry(radius-0.7,50,50);
         const material = new THREE.MeshBasicMaterial({ 
-            map: new THREE.TextureLoader().load("https://raw.githubusercontent.com/diogorainhalopes/CG-21-22/main/LAB2/images/earth.jpg"),
+            map: new THREE.TextureLoader().load("images/earth.jpg"),
             //color: "blue"
         });
         cosmicBody = new THREE.Mesh(geometry,material);
         
        const geometry2 = new THREE.SphereGeometry(radius,50,50);
         const material2 = new THREE.MeshBasicMaterial({ 
-            map: new THREE.TextureLoader().load("https://raw.githubusercontent.com/diogorainhalopes/CG-21-22/main/LAB2/images/cloud.png"),
+            map: new THREE.TextureLoader().load("images/cloud.png"),
             side        : THREE.DoubleSide,
             opacity     : 0.22,
             transparent : true,
