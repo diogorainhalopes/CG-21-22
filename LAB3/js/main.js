@@ -42,10 +42,10 @@ function createScene() {
     scene = new THREE.Scene();
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-    directLight.position.set(50, 50, 0);
+    directLight.position.set(10, 10, 2);
     dlHelper = new THREE.DirectionalLightHelper(directLight, 3)
     directLight.visible = true;
     directLight.castShadow = true;
@@ -53,14 +53,14 @@ function createScene() {
 
 
     //palanque = new Palanque();
-    floor = new Floor();
+    //floor = new Floor();
     //phase1 = new Phase1();
     //phase2 = new Phase2();
     phase3 = new Phase3();
 
     
     //scene.add(palanque);
-    scene.add(floor);
+    //scene.add(floor);
     //scene.add(phase1);
     //scene.add(phase2);
     scene.add(phase3);

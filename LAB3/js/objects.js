@@ -234,14 +234,94 @@ class Phase3 extends Entity {
             0.0, 2.7, 0.0,
             1.0, 2.0, 0.0,
 
+            //body
+            -2.8, 1.3, 0.0,
+            0.4, 0.5, 0.0,
+            0.0, 0.0, 0.5,
+
+            -2.8, 1.3, 0.0,
+            -2.0, 0.0, 0.92,
+            0.0, 0.0, 0.5,
+
+           -2.8, 1.3, 0.0,
+            0.4, 0.5, 0.0,
+            0.0, 0.0, -0.5,
+
+            -2.8, 1.3, 0.0,
+            -2.0, 0.0, -0.92,
+            0.0, 0.0, -0.5,
+
+            // under
+            -1.0, 0.3, 0.1,
+            0.4, 0.5, 0.0,
+            0.0, 0.0, 0.5,
+
+            -1.0, 0.3, 0.1,
+            0.0, 0.0, 0.5,
+            -1.0, -0.07, 0.85,  ///////////////
+
+            -1.0, 0.3, -0.1,
+            0.4, 0.5, 0.0,
+            0.0, 0.0, -0.5,
+
+            -1.0, 0.3, -0.1,
+            0.0, 0.0, -0.5,
+            -1.0, -0.07, -0.85,  ///////////////
+
+            // wings
+           
+
+            -1.5, 1.0, 0.17,
+            0.0, 0.0, 0.5,
+            -2.0, 0.0, 0.92,
+
+
+            -1.5, 1.0, -0.17,
+            0.0, 0.0, -0.5,
+            -2.0, 0.0, -0.92,
+
+            // wing outter
+            -1.5, 1.0, 0.17,
+            0.4, 0.5, 0.0,
+            -1.0, -0.07, 0.85,
+
+            0.4, 0.5, 0.0,
+            0.0, 0.0, 0.5,
+            -1.0, -0.07, 0.85, 
+
+            -1.5, 1.0, -0.17,
+            0.4, 0.5, 0.0,
+            -1.0, -0.07, -0.85,
+
+            0.4, 0.5, 0.0,
+            0.0, 0.0, -0.5,
+            -1.0, -0.07, -0.85, 
+ 
             
         ] );
 
+        var uvs = new Float32Array([
+            0.0, 0.0,
+            1.0, 0.0,
+            1.0, 1.0,
+
+            1.0, 1.0,
+            0.0, 1.0,
+            0.0, 0.0
+        ])
+
+
         // itemSize = 3 because there are 3 values (components) per vertex
-        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        geometry.computeVertexNormals()
-        var material = new THREE.MeshPhongMaterial( { color: "white" , side : THREE.DoubleSide} );
+        var BFG = new THREE.BufferAttribute( vertices, 3 )
+        geometry.setAttribute( 'position', BFG);
+       // geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+        geometry.computeVertexNormals();
         
+        var material = new THREE.MeshPhongMaterial( { color: "lightgrey",
+                                                    //map: new THREE.TextureLoader().load("azulejos.jpg"),
+                                                    side : THREE.DoubleSide} );
+
+        BFG
         this.add(new THREE.Mesh( geometry, material ));
     }
 
