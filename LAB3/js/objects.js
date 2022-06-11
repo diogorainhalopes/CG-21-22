@@ -341,3 +341,77 @@ class Phase3 extends Entity {
     }
 
 }
+
+
+class Lamp extends Entity {
+    constructor(x, y, z/*, target, intensity, distance*/) {
+        super();
+        this.assemble();
+        //this.light(x, y, z, target, intensity, distance);
+        this.position.set(x, y+0.3, z);
+    }
+
+    assemble() {
+        this.addCone(1.7, 0, 0);
+        this.addSphere(0, 0, 0);
+        this.rotateZ(-Math.PI/11);
+    }
+
+    addCone(x, y, z) {
+        const geometry = new THREE.ConeGeometry(5, 20, 32);
+        const material = new THREE.MeshPhongMaterial({color: "black"});
+        
+        var cone = new THREE.Mesh(geometry,material);
+        cone.position.set(x, y, z);
+        cone.castShadow = true;
+        cone.receiveShadow = true;
+        cone.rotateZ(-Math.PI/2);
+        cone.scale.set(0.15, 0.15, 0.15);
+        this.add(cone);
+    }
+
+    addSphere(x, y, z) {
+        const geometry = new THREE.SphereGeometry( 4.5, 32, 16 );
+        const material = new THREE.MeshPhongMaterial({color: "yellow"});
+        
+        var ball = new THREE.Mesh(geometry,material);
+        ball.position.set(x, y, z);
+        ball.castShadow = true;
+        ball.receiveShadow = true;
+        ball.scale.set(0.15, 0.15, 0.15);
+        this.add(ball);
+    }
+
+}
+
+
+
+class SpotLight extends Entity {
+
+    constructor(x, y, z, target, intensity, distance) {
+        super();
+        this.lamp = new Lamp(x, y, z);
+        this.light = new THREE.SpotLight(0xFFFFFF, intensity, distance, Math.PI/6);
+        if(z < 0) { this.light.position.set(x, y, z); }
+        if(z == 0) { this.light.position.set(x, y, z); }
+        if(z > 0) { this.light.position.set(x, y, z); }
+
+        this.light.target = target;
+        this.light.castShadow = true;
+        this.light.shadow.mapSize.width = 1024;
+        this.light.shadow.mapSize.height = 1024;
+        this.light.shadow.camera.near = 1;
+        this.light.shadow.camera.far = 1000;
+        this.light.penumbra = 0.1;
+
+        this.add(this.lamp);
+        this.add(this.light);
+        this.light.target.updateMatrixWorld();
+    }
+
+    switch() {
+        this.light.visible = !this.light.visible
+    }
+}
+
+

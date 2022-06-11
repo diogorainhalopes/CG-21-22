@@ -28,15 +28,16 @@ var globalLighting = false;
 var shading = false;
 var lightingCalculation = false;
 
-var spotlightFirst = false;
-var spotlightSecond = false;
-var spotlightThird = false;
+var spotlight1 = false;
+var spotlight2 = false;
+var spotlight3 = false;
 
 var group;
 
 var palanque;
 var floor;
 var phase1, phase2, phase3;
+var spot1, spot2, spot3;
 
 function createScene() {
 
@@ -61,9 +62,18 @@ function createScene() {
     phase1 = new Phase1();
     phase2 = new Phase2();
     phase3 = new Phase3();
+    spot1 = new SpotLight(10, 12, 6, phase1, 5, 150);
+    spot2 = new SpotLight(10, 12, 0, phase2, 5, 150);
+    spot3 = new SpotLight(10, 12, -6, phase3, 5, 150);
+
 
     group = new THREE.Object3D();
-    group.add(palanque, floor, phase1, phase2, phase3);
+    group.add(palanque); 
+    group.add(floor); 
+    group.add(phase1);
+    group.add(phase2);
+    group.add(phase3);
+    group.add(spot1, spot2, spot3);
     group.scale.set(0.2, 0.2, 0.2);
     scene.add(group);
 
@@ -157,6 +167,10 @@ function switchCamera() {
     camera[indexCamera].lookAt(scene.position);
 }
 
+function turnSpot(spotLight) {
+    spotLight.switch();
+}
+
 
 function onKeyDown(e) {
     'use strict';
@@ -218,15 +232,15 @@ function onKeyDown(e) {
             break;
         case 122: // z
         case 90:
-            spotlightFirst = true;
+            spotlight1 = true;
             break;
         case 120: // x
         case 88: 
-            spotlightSecond = true;
+            spotlight2 = true;
             break;
         case 99: // c
         case 67: 
-            spotlightThird = true;
+            spotlight3 = true;
             break;
 
     }
@@ -282,7 +296,7 @@ function onKeyUp(e) {
         case 68:
             globalLighting = false;
             break; */
-        case 122: // z
+        /* case 122: // z
         case 90:
             spotlightFirst = false;
             break;
@@ -293,7 +307,7 @@ function onKeyUp(e) {
         case 99: // c
         case 67: 
             spotlightThird = false;
-            break;
+            break; */
     
     }
 }
@@ -349,6 +363,9 @@ function animate() {
     if(phase2Rot) { rotatePhase2(); };
     if(phase3Rot) { rotatePhase3(); };
     if(globalLighting) {turnGlobalLighting(); globalLighting=false;}
+    if(spotlight1) {turnSpot(spot1); spotlight1=false;}
+    if(spotlight2) {turnSpot(spot2); spotlight2=false;}
+    if(spotlight3) {turnSpot(spot3); spotlight3=false;}
 
     update();
     render();
