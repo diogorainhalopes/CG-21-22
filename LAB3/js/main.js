@@ -45,24 +45,24 @@ function createScene() {
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-    directLight.position.set(10, 10, 2);
+    directLight.position.set(60, 60, 60);
     dlHelper = new THREE.DirectionalLightHelper(directLight, 3)
     directLight.visible = true;
     directLight.castShadow = true;
     
 
 
-    //palanque = new Palanque();
-    //floor = new Floor();
-    //phase1 = new Phase1();
-    //phase2 = new Phase2();
+    palanque = new Palanque();
+    floor = new Floor();
+    phase1 = new Phase1();
+    phase2 = new Phase2();
     phase3 = new Phase3();
 
     
-    //scene.add(palanque);
-    //scene.add(floor);
-    //scene.add(phase1);
-    //scene.add(phase2);
+    scene.add(palanque);
+    scene.add(floor);
+    scene.add(phase1);
+    scene.add(phase2);
     scene.add(phase3);
     scene.add(directLight, dlHelper);
 }
@@ -270,7 +270,7 @@ function init() {
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
-    camera[indexCamera].position.set(6, 4, 4 );
+    camera[indexCamera].position.set(30, 30, 30 );
     controls.update();
 /*      ORBIT CONTROLS      */ 
     window.addEventListener("keydown", onKeyDown);

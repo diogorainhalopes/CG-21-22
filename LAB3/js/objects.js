@@ -34,7 +34,7 @@ class Palanque extends Entity {
     constructor() {
         super();
         this.assemble();
-        this.position.set(0, 20, 0);
+        this.position.set(0, 7.5, 0);
         //this.translateY(FLOOR_HEIGHT);
     }
 
@@ -43,17 +43,17 @@ class Palanque extends Entity {
         this.addLeg(15, 0, -15);
         this.addLeg(-15, 0, 15);
         this.addLeg(-15, 0, -15);
-        this.addStep(18, -13, 0);
-        this.addStep(18, -3, 0);
+        this.addStep(21, -5, 0);
+        this.addStep(18, -1, 0);
         this.addBase(0, 3, 0);
-        this.addSupport(0, 15, 15);
-        this.addSupport(0, 15, -15);
+        this.addSupport(0, 3, 15);
+        this.addSupport(0, 3, -15);
        
     }
 
     addLeg(x, y, z) {
          
-        const geometry = new THREE.CylinderGeometry(4, 4, 40, 32, 1);
+        const geometry = new THREE.CylinderGeometry(4, 4, 15, 32, 1);
         const material = new THREE.MeshPhongMaterial({color: "rgb(153, 255, 204)"});
         
         var leg = new THREE.Mesh(geometry,material);
@@ -62,7 +62,7 @@ class Palanque extends Entity {
     }
 
     addStep(x, y, z) {
-        const geometry = new THREE.BoxGeometry(6, 2, 35);
+        const geometry = new THREE.BoxGeometry(6, 1, 35);
         const material = new THREE.MeshPhongMaterial({color: "rgb(204, 204, 255)"});
         
         var step = new THREE.Mesh(geometry,material);
@@ -80,7 +80,7 @@ class Palanque extends Entity {
     }
 
     addSupport(x, y, z) {
-        const path = new CustomSinCurve( 8.3 );
+        const path = new CustomSinCurve( 7 );
         const geometry = new THREE.TubeGeometry( path, 45, 1.5, 34, false );
         const material = new THREE.MeshPhongMaterial( { color: "rgb(255, 230, 230)" } );
         var support = new THREE.Mesh(geometry,material);
@@ -108,7 +108,7 @@ class Phase1 extends Entity {
     constructor() {
         super();
         this.assemble();
-        this.position.set(0, 30, 7);
+        this.position.set(0, 15, 6);
         this.scale.set(2, 2, 2);
     }
 
@@ -140,7 +140,7 @@ class Phase2 extends Entity {
     constructor() {
         super();
         this.assemble();
-        this.position.set(-15, 30, 5);
+        this.position.set(0, 15, 0);
         this.scale.set(2, 2, 2);
 
     }
@@ -199,8 +199,8 @@ class Phase3 extends Entity {
     constructor() {
         super();
         this.assemble();
-        this.position.set(0, 0, 0);
-       // this.scale.set(2, 2, 2);
+        this.position.set(0, 15, -6);
+        this.scale.set(2, 2, 2);
 
     }
 
