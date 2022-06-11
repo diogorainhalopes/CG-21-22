@@ -74,7 +74,7 @@ function createScene() {
     group.add(phase2);
     group.add(phase3);
     group.add(spot1, spot2, spot3);
-    group.scale.set(0.2, 0.2, 0.2);
+    group.scale.set(0.18, 0.18, 0.18);
     scene.add(group);
 
 /*     directLight.shadow.camera.left = -25;
