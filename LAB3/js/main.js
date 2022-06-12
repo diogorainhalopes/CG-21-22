@@ -48,15 +48,12 @@ function createScene() {
     scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-    directLight.position.set(10, 10, -10);
+    directLight.position.set(50, 50, -50);
     dlHelper = new THREE.DirectionalLightHelper(directLight, 3)
-    dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
     
     directLight.visible = true;
     directLight.castShadow = true;
     
-
-
     palanque = new Palanque();
     floor = new Floor();
     phase1 = new Phase1();
@@ -65,8 +62,8 @@ function createScene() {
     spot1 = new SpotLight(10, 12, 6, phase1, 5, 150);
     spot2 = new SpotLight(10, 12, 0, phase2, 5, 150);
     spot3 = new SpotLight(10, 12, -6, phase3, 5, 150);
-
-
+    
+    
     group = new THREE.Object3D();
     group.add(palanque); 
     group.add(floor); 
@@ -74,25 +71,27 @@ function createScene() {
     group.add(phase2);
     group.add(phase3);
     group.add(spot1, spot2, spot3);
-    group.scale.set(0.18, 0.18, 0.18);
+    //group.scale.set(0.18, 0.18, 0.18);
     scene.add(group);
+    
+    directLight.shadow.camera.top += 25;
+    directLight.shadow.camera.bottom -= 25;
+    directLight.shadow.camera.left -= 25;
+    directLight.shadow.camera.right += 25;
+    
+    directLight.shadow.mapSize.width = 2048;
+    directLight.shadow.mapSize.height = 2048;
+    /* directLight.shadow.camera.near = 1;
+    directLight.shadow.camera.far = 1000; */
 
-/*     directLight.shadow.camera.left = -25;
-    directLight.shadow.camera.right = 25;
-    directLight.shadow.camera.top = 25;
-    directLight.shadow.camera.bottom = -25; */
-
+    dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
     /* scene.add(palanque);
     scene.add(floor);
     scene.add(phase1);
     scene.add(phase2);
     scene.add(phase3); */
-
-    directLight.shadow.mapSize.width = 1024;
-    directLight.shadow.mapSize.height = 1024;
-
-    directLight.shadow.camera.near = 1;
-    directLight.shadow.camera.far = 1000;
+    
+    
     scene.add(directLight, dlHelper, dlHelper2);
 }
 
