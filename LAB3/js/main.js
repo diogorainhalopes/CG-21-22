@@ -59,9 +59,9 @@ function createScene() {
     phase1 = new Phase1();
     phase2 = new Phase2();
     phase3 = new Phase3();
-    spot1 = new SpotLight(10, 12, 6, phase1, 5, 150);
-    spot2 = new SpotLight(10, 12, 0, phase2, 5, 150);
-    spot3 = new SpotLight(10, 12, -6, phase3, 5, 150);
+    spot1 = new SpotLight(10, 12, 6, phase1, 0.5, 150);
+    spot2 = new SpotLight(10, 12, 0, phase2, 0.5, 150);
+    spot3 = new SpotLight(10, 12, -6, phase3, 0.5, 150);
     
     
     group = new THREE.Object3D();
@@ -74,10 +74,10 @@ function createScene() {
     //group.scale.set(0.18, 0.18, 0.18);
     scene.add(group);
     
-    directLight.shadow.camera.top += 25;
-    directLight.shadow.camera.bottom -= 25;
-    directLight.shadow.camera.left -= 25;
-    directLight.shadow.camera.right += 25;
+    directLight.shadow.camera.top += 40;
+    directLight.shadow.camera.bottom -= 40;
+    directLight.shadow.camera.left -= 40;
+    directLight.shadow.camera.right += 40;
     
     directLight.shadow.mapSize.width = 2048;
     directLight.shadow.mapSize.height = 2048;
@@ -330,18 +330,18 @@ function init() {
     renderer.shadowMap.enabled = true;
    // renderer.setClearColor("lightblue");
     document.body.appendChild(renderer.domElement);
-
+    //document.body.appendChild( VRButton.createButton( renderer ) );
     clock = new THREE.Clock(true);
     deltaScale = 1;
     
     createScene();
-    camera[0] = createCameraP(8,8,8);
-    camera[1] = createCameraP(8,8,0);
-    camera[2] = createCameraP(0,15,0);
+    camera[0] = createCameraP(45, 45, 45);
+    camera[1] = createCameraP(45,45,0);
+    camera[2] = createCameraP(0,45,0);
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
-    camera[indexCamera].position.set(8, 8, 0);
+    camera[indexCamera].position.set(30, 30, 30);
     controls.update();
 /*      ORBIT CONTROLS      */ 
     window.addEventListener("keydown", onKeyDown);

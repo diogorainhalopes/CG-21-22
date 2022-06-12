@@ -46,10 +46,11 @@ class Palanque extends Entity {
         this.addLeg(-15, 0, 15);
         this.addLeg(-15, 0, -15);
         this.addStep(21, -5, 0);
-        this.addStep(18, -1, 0);
+        this.addStep(17, -1, 0);
         this.addBase(0, 3, 0);
         this.addSupport(0, 3, 15);
         this.addSupport(0, 3, -15);
+        this.addWall(-15, 12, 0);
        
     }
 
@@ -77,8 +78,8 @@ class Palanque extends Entity {
     }
 
     addBase(x, y, z) {
-        const geometry = new THREE.BoxGeometry(35, 2, 35);
-        const material = new THREE.MeshPhongMaterial({color: "grey"});
+        const geometry = new THREE.BoxGeometry(30, 2, 35);
+        const material = new THREE.MeshPhongMaterial({color: "lightgrey"});
         
         var base = new THREE.Mesh(geometry,material);
         base.position.set(x, y, z);
@@ -97,6 +98,17 @@ class Palanque extends Entity {
         support.receiveShadow = true;
         this.add(support);
     }
+    addWall(x, y, z) {
+        const geometry = new THREE.BoxGeometry(1, 30, 35);
+        const material = new THREE.MeshPhongMaterial({color: "lightgrey"});
+        
+        var wall = new THREE.Mesh(geometry,material);
+        wall.position.set(x, y, z);
+        wall.castShadow = true;
+        wall.receiveShadow = true;
+        this.add(wall);        
+    }
+
 }
 
 class Floor extends Entity {
@@ -413,5 +425,4 @@ class SpotLight extends Entity {
         this.light.visible = !this.light.visible
     }
 }
-
 
