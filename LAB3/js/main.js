@@ -4,7 +4,7 @@ var scene, render;
 var camera = [] , indexCamera = 0;
 var scene, renderer;
 var aspectRatio;
-var viewSize = 150;
+var viewSize = 60;
 
 var clock, deltaScale;
 var deltaTime;
@@ -105,6 +105,27 @@ function createCameraP(x,y,z) {
 
 }
 
+
+function createCameraO(x,y,z) {
+    'use strict';
+
+    aspectRatio = window.innerWidth / window.innerHeight;
+    
+    var camera = new THREE.OrthographicCamera( 
+        viewSize * aspectRatio/- 2, 
+        viewSize * aspectRatio / 2, 
+        viewSize / 2, 
+        viewSize / -2, 
+        1, 
+        1000
+        );
+
+    camera.position.set(x,y,z);
+    camera.lookAt(0, 555, 0);
+    return camera;
+
+}
+
 function createCameraS(x,y,z) {
     'use strict';
 }
@@ -112,8 +133,20 @@ function createCameraS(x,y,z) {
 
 function onResize(){
     'use strict';
-    camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
-    camera[indexCamera].updateProjectionMatrix();
+
+    aspectRatio = window.innerWidth / window.innerHeight;
+
+    camera[0].aspect = window.innerWidth / window.innerHeight;
+    camera[0].updateProjectionMatrix();
+    camera[2].aspect = window.innerWidth / window.innerHeight;
+    camera[2].updateProjectionMatrix();
+
+    camera[1].right = viewSize * aspectRatio / 2;
+    camera[1].left = -camera[1].right;
+    camera[1].top = viewSize / 2;
+    camera[1].bottom = -camera[1].top;
+    camera[1].updateProjectionMatrix();
+
 
     renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -142,6 +175,7 @@ function pauseGame() {
     // TODO
 
 }
+
 
 
 function resizePerspective() {
@@ -191,7 +225,13 @@ function turnGlobalLighting() {
 
 function switchCamera() {
     'use strict'
-    camera[indexCamera].lookAt(scene.position);
+    if(indexCamera === 1) {
+        camera[indexCamera].lookAt(0, 10, 0);
+
+    }
+    else {
+        camera[indexCamera].lookAt(scene.position);
+    }
 }
 
 function turnSpot(spotLight) {
@@ -371,7 +411,7 @@ function init() {
     
     createScene();
     camera[0] = createCameraP(45, 45, 45);
-    camera[1] = createCameraP(45,45,0);
+    camera[1] = createCameraO(45,15,0);
     camera[2] = createCameraP(0,45,0);
     camera[3] = new THREE.StereoCamera();
 
@@ -383,17 +423,15 @@ function init() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp)
     window.addEventListener("resize", onResize);
+
     renderer.xr.addEventListener('sessionstart', function () {
-        
         scene.add(vrgroup);
         camera[indexCamera].lookAt(scene.position)
         vrgroup.add(camera[indexCamera]);
-        VR = true;
     });
     renderer.xr.addEventListener('sessionend', function () {
         scene.remove(vrgroup);
         vrgroup.remove(camera[indexCamera]);
-        VR = false;
     });
 }
 
@@ -415,8 +453,7 @@ function animate() {
     if(spotlight3) {turnSpot(spot3); spotlight3=false;}
 
     update();
-    if(renderer.xr.getSession()) {~
-
+    if(renderer.xr.getSession()) {
         renderVR();
         renderer.setAnimationLoop( render );
     }
