@@ -87,11 +87,11 @@ function onResize(){
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    if (indexCamera == 0){  
+    if (indexCamera == 0) {  
         resizeOrthographic();
 
     }
-    else{
+    else {
       resizePerspective();
 
     }
@@ -103,11 +103,11 @@ function resizeOrthographic(){
     
     if (window.innerHeight > 0 && window.innerWidth > 0) {
         
-        camera.right = viewSize * aspectRatio / 2;
-        camera.left = -camera.right;
-        camera.top = viewSize / 2;
-        camera.bottom = -camera.top;
-        camera.updateProjectionMatrix();
+        camera[indexCamera].right = viewSize * aspectRatio / 2;
+        camera[indexCamera].left = -camera.right;
+        camera[indexCamera].top = viewSize / 2;
+        camera[indexCamera].bottom = -camera.top;
+        camera[indexCamera].updateProjectionMatrix();
 
         renderer.setSize(window.innerWidth, window.innerHeight);
 
