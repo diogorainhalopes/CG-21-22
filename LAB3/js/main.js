@@ -2,8 +2,9 @@
 
 var scene, render;
 var camera = [] , indexCamera = 0;
+var stereoCamera;
 var scene, renderer;
-var aspectRatio = 1.6;  // encompasses lots of resolutions
+var ratio = 1.6; // encompasses lots of resolutions
 var viewSize = 150;
 
 var clock, deltaScale;
@@ -45,6 +46,7 @@ function createScene() {
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
     scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
     directLight.position.set(50, 50, -50);
@@ -92,6 +94,7 @@ function createScene() {
     
     
     scene.add(directLight, dlHelper, dlHelper2);
+   
 }
 
 
@@ -116,6 +119,7 @@ function onResize(){
 }
 
 function resizePerspective() {
+
     if((window.innerWidth / window.innerHeight) < ratio) {
         camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
         camera[indexCamera].updateProjectionMatrix();
@@ -310,9 +314,42 @@ function onKeyUp(e) {
     }
 }
 
-function render() {
+function renderNVR() {
     'use strict';
     renderer.render(scene, camera[indexCamera]);
+
+}
+
+function render() {
+
+    'use strict';
+    renderer.render(scene, camera[indexCamera]);
+
+    camera[indexCamera].updateWorldMatrix();
+    stereoCamera.update(camera[indexCamera]);
+
+    // TODO
+    // how to get out of VR mode 
+    
+
+    const size = new THREE.Vector2();
+    renderer.getSize(size);
+
+    renderer.setScissorTest(true);
+
+    renderer.setScissor(0, 0, size.width / 2, size.height);
+    renderer.setViewport(0, 0, size.width / 2, size.height);
+    renderer.render(scene, stereoCamera.cameraL);
+
+    renderer.setScissor(size.width / 2, 0, size.width / 2, size.height);
+    renderer.setViewport(size.width / 2, 0, size.width / 2, size.height);
+    renderer.render(scene, stereoCamera.cameraR);
+
+    renderer.setScissorTest(false);
+}
+
+function renderVR() {
+
 }
 
 function update() {
@@ -331,7 +368,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
     renderer.xr.enabled = true;
-    
+
     
     clock = new THREE.Clock(true);
     deltaScale = 1;
@@ -340,15 +377,17 @@ function init() {
     camera[0] = createCameraP(45, 45, 45);
     camera[1] = createCameraP(45,45,0);
     camera[2] = createCameraP(0,45,0);
+    stereoCamera = new THREE.StereoCamera();
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
     camera[indexCamera].position.set(30, 30, 30);
     controls.update();
-/*      ORBIT CONTROLS      */ 
+
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp)
     window.addEventListener("resize", onResize);
+
 }
 
 function animate() {
@@ -369,7 +408,6 @@ function animate() {
     if(spotlight3) {turnSpot(spot3); spotlight3=false;}
 
     update();
-    render();
+    renderer.setAnimationLoop(() => { render(); });
 
-    requestAnimationFrame(animate);
 }
