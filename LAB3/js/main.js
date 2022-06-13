@@ -330,7 +330,10 @@ function init() {
     renderer.shadowMap.enabled = true;
    // renderer.setClearColor("lightblue");
     document.body.appendChild(renderer.domElement);
-    //document.body.appendChild( VRButton.createButton( renderer ) );
+    document.body.appendChild(VRButton.createButton(renderer));
+    renderer.xr.enabled = true;
+    
+    
     clock = new THREE.Clock(true);
     deltaScale = 1;
     
