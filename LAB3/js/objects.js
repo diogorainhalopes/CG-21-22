@@ -1,4 +1,3 @@
-
 "use strict";
 
 
@@ -6,6 +5,7 @@ class CustomSinCurve extends THREE.Curve {
 	constructor( scale = 1 ) {
 		super();
 		this.scale = scale;
+
 	}
 	getPoint( t, optionalTarget = new THREE.Vector3() ) {
 		const tx = t * 3 - 1.5;
@@ -26,6 +26,7 @@ class Entity extends THREE.Object3D {
 
     rotateItself(angle) {
         this.rotateY(angle);
+
     }
         
 }
@@ -38,6 +39,7 @@ class Palanque extends Entity {
         this.assemble();
         this.position.set(0, 7.5, 0);
         //this.translateY(FLOOR_HEIGHT);
+
     }
 
     assemble() {
@@ -64,6 +66,7 @@ class Palanque extends Entity {
         leg.castShadow = true;
         leg.receiveShadow = true;
         this.add(leg);
+
     }
 
     addStep(x, y, z) {
@@ -75,6 +78,7 @@ class Palanque extends Entity {
         step.castShadow = true;
         step.receiveShadow = true;
         this.add(step);
+
     }
 
     addBase(x, y, z) {
@@ -86,6 +90,7 @@ class Palanque extends Entity {
         base.castShadow = true;
         base.receiveShadow = true;
         this.add(base);
+
     }
 
     addSupport(x, y, z) {
@@ -97,6 +102,7 @@ class Palanque extends Entity {
         support.castShadow = true;
         support.receiveShadow = true;
         this.add(support);
+
     }
     addWall(x, y, z) {
         const geometry = new THREE.BoxGeometry(1, 30, 35);
@@ -106,7 +112,8 @@ class Palanque extends Entity {
         wall.position.set(x, y, z);
         wall.castShadow = true;
         wall.receiveShadow = true;
-        this.add(wall);        
+        this.add(wall);      
+
     }
 
 }
@@ -122,6 +129,7 @@ class Floor extends Entity {
         floor.receiveShadow = true;
         this.add(floor);
         //this.position.set(0, 0, 0);
+
     }
 }
 
@@ -133,6 +141,7 @@ class Phase1 extends Entity {
         this.assemble();
         this.position.set(0, 15, 6);
         this.scale.set(2, 2, 2);
+
     }
 
     assemble() {
@@ -156,6 +165,7 @@ class Phase1 extends Entity {
         phase1.castShadow = true;
         phase1.receiveShadow = true;
         this.add(phase1);
+
     }
 
 }
@@ -210,13 +220,14 @@ class Phase2 extends Entity {
         ] );
 
         // itemSize = 3 because there are 3 values (components) per vertex
-        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        geometry.computeVertexNormals()
-        var material = new THREE.MeshPhongMaterial( { color: "white" , side : THREE.DoubleSide} );
+        geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+        geometry.computeVertexNormals();
+        var material = new THREE.MeshPhongMaterial({color: "white" , side : THREE.DoubleSide});
         var phase2 = new THREE.Mesh( geometry, material );
         phase2.castShadow = true;
         phase2.receiveShadow = true;
         this.add(phase2);
+
     }
 
 }
@@ -339,7 +350,7 @@ class Phase3 extends Entity {
 
 
         // itemSize = 3 because there are 3 values (components) per vertex
-        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ));
+        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
        // geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
         geometry.computeVertexNormals();
         
@@ -350,6 +361,7 @@ class Phase3 extends Entity {
         phase3.castShadow = true;
         phase3.receiveShadow = true;
         this.add(phase3);
+        
     }
 
 }
@@ -361,12 +373,14 @@ class Lamp extends Entity {
         this.assemble();
         //this.light(x, y, z, target, intensity, distance);
         this.position.set(x, y+0.3, z);
+
     }
 
     assemble() {
         this.addCone(1.7, 0, 0);
         this.addSphere(0, 0, 0);
         this.rotateZ(-Math.PI/11);
+
     }
 
     addCone(x, y, z) {
@@ -380,6 +394,7 @@ class Lamp extends Entity {
         cone.rotateZ(-Math.PI/2);
         cone.scale.set(0.15, 0.15, 0.15);
         this.add(cone);
+
     }
 
     addSphere(x, y, z) {
@@ -392,6 +407,7 @@ class Lamp extends Entity {
         ball.receiveShadow = true;
         ball.scale.set(0.15, 0.15, 0.15);
         this.add(ball);
+
     }
 
 }
@@ -419,10 +435,12 @@ class SpotLight extends Entity {
         this.add(this.lamp);
         this.add(this.light);
         this.light.target.updateMatrixWorld();
+
     }
 
     switch() {
-        this.light.visible = !this.light.visible
+        this.light.visible = !this.light.visible;
+
     }
 }
 
