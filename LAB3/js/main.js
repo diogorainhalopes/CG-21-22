@@ -2,9 +2,8 @@
 
 var scene, render;
 var camera = [] , indexCamera = 0;
-var stereoCamera;
 var scene, renderer;
-var ratio = 1.6; // encompasses lots of resolutions
+var aspectRatio;
 var viewSize = 150;
 
 var clock, deltaScale;
@@ -33,6 +32,7 @@ var spotlight2 = false;
 var spotlight3 = false;
 
 var group;
+var vrgroup;
 
 var palanque;
 var floor;
@@ -46,7 +46,6 @@ function createScene() {
     const axesHelper = new THREE.AxesHelper(1000);   
     scene.add(axesHelper);
     scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
     directLight.position.set(50, 50, -50);
@@ -82,19 +81,15 @@ function createScene() {
     
     directLight.shadow.mapSize.width = 2048;
     directLight.shadow.mapSize.height = 2048;
-    /* directLight.shadow.camera.near = 1;
-    directLight.shadow.camera.far = 1000; */
+
 
     dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
-    /* scene.add(palanque);
-    scene.add(floor);
-    scene.add(phase1);
-    scene.add(phase2);
-    scene.add(phase3); */
-    
     
     scene.add(directLight, dlHelper, dlHelper2);
-   
+
+
+    vrgroup = new THREE.Group();
+    vrgroup.position.set(45, 45, 45);  // Set the initial VR Headset Position.
 }
 
 
@@ -110,16 +105,46 @@ function createCameraP(x,y,z) {
 
 }
 
+function createCameraS(x,y,z) {
+    'use strict';
+}
+
 
 function onResize(){
     'use strict';
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    resizePerspective();
+    camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
+    camera[indexCamera].updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
 
-function resizePerspective() {
+/* function onVRExit() {
+    var str = event.display.isPresenting ? 'EXIT VR' : 'ENTER VR';
+	_device = event.display;
+	if(event.display.isPresenting === false){
+		cameOut = true;
+		camera.position.z = 0;
+		camera.position.y = 0;
+		camera.position.x = 0;
+		camera.rotation.x = 0;
+		camera.rotation.y = 0;
+		camera.rotation.z = 0;
+		
+		camera.lookAt( scene.position );
+		renderer.setSize( window.innerWidth, window.innerHeight )
 
+    }
+} */
+
+function pauseGame() {
+
+    // TODO
+
+}
+
+
+function resizePerspective() {
     if((window.innerWidth / window.innerHeight) < ratio) {
         camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
         camera[indexCamera].updateProjectionMatrix();
@@ -293,45 +318,20 @@ function onKeyUp(e) {
         case 115: // s
         case 83:
             lightingCalculation = false;
-            break;
-       /*  case 100: // d
-        case 68:
-            globalLighting = false;
-            break; */
-        /* case 122: // z
-        case 90:
-            spotlightFirst = false;
-            break;
-        case 120: // x
-        case 88: 
-            spotlightSecond = false;
-            break;
-        case 99: // c
-        case 67: 
-            spotlightThird = false;
-            break; */
-    
+            break;    
     }
 }
 
-function renderNVR() {
+function render() {
     'use strict';
     renderer.render(scene, camera[indexCamera]);
-
 }
 
-function render() {
-
+function renderVR() {
     'use strict';
     renderer.render(scene, camera[indexCamera]);
-
     camera[indexCamera].updateWorldMatrix();
-    stereoCamera.update(camera[indexCamera]);
-
-    // TODO
-    // how to get out of VR mode 
-    
-
+    camera[3].update(camera[indexCamera]);
     const size = new THREE.Vector2();
     renderer.getSize(size);
 
@@ -339,17 +339,13 @@ function render() {
 
     renderer.setScissor(0, 0, size.width / 2, size.height);
     renderer.setViewport(0, 0, size.width / 2, size.height);
-    renderer.render(scene, stereoCamera.cameraL);
+    renderer.render(scene, camera[3].cameraL);
 
     renderer.setScissor(size.width / 2, 0, size.width / 2, size.height);
     renderer.setViewport(size.width / 2, 0, size.width / 2, size.height);
-    renderer.render(scene, stereoCamera.cameraR);
+    renderer.render(scene, camera[3].cameraR);
 
     renderer.setScissorTest(false);
-}
-
-function renderVR() {
-
 }
 
 function update() {
@@ -362,14 +358,14 @@ function init() {
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
+    renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-   // renderer.setClearColor("lightblue");
+
     document.body.appendChild(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
     renderer.xr.enabled = true;
 
-    
     clock = new THREE.Clock(true);
     deltaScale = 1;
     
@@ -377,17 +373,28 @@ function init() {
     camera[0] = createCameraP(45, 45, 45);
     camera[1] = createCameraP(45,45,0);
     camera[2] = createCameraP(0,45,0);
-    stereoCamera = new THREE.StereoCamera();
+    camera[3] = new THREE.StereoCamera();
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
     camera[indexCamera].position.set(30, 30, 30);
     controls.update();
-
+/*      ORBIT CONTROLS      */ 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp)
     window.addEventListener("resize", onResize);
-
+    renderer.xr.addEventListener('sessionstart', function () {
+        
+        scene.add(vrgroup);
+        camera[indexCamera].lookAt(scene.position)
+        vrgroup.add(camera[indexCamera]);
+        VR = true;
+    });
+    renderer.xr.addEventListener('sessionend', function () {
+        scene.remove(vrgroup);
+        vrgroup.remove(camera[indexCamera]);
+        VR = false;
+    });
 }
 
 function animate() {
@@ -408,6 +415,15 @@ function animate() {
     if(spotlight3) {turnSpot(spot3); spotlight3=false;}
 
     update();
-    renderer.setAnimationLoop(() => { render(); });
+    if(renderer.xr.getSession()) {~
 
+        renderVR();
+        renderer.setAnimationLoop( render );
+    }
+    else{
+        render();
+        requestAnimationFrame(animate);
+    }
+    
 }
+
