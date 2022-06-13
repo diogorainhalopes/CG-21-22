@@ -1,10 +1,9 @@
-
 /*global THREE, requestAnimationFrame, console*/
 
 var scene, render;
 var camera = [] , indexCamera = 0;
 var scene, renderer;
-var aspectRatio;
+var aspectRatio = 1.6;  // encompasses lots of resolutions
 var viewSize = 150;
 
 var clock, deltaScale;
@@ -374,7 +373,3 @@ function animate() {
 
     requestAnimationFrame(animate);
 }
-
-
-
-
