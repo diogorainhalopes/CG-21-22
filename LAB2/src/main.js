@@ -3,7 +3,7 @@ var scene, render;
 var camera = [] , indexCamera = 0;
 var spaceEntities = [];
 var scene, renderer;
-var aspectRatio;
+var aspectRatio = 1.6;
 var viewSize = 150;
 
 var clock, deltaScale;
@@ -117,7 +117,7 @@ function resizeOrthographic(){
   
 function resizePerspective() {
 
-    if((window.innerWidth / window.innerHeight) < ratio) {
+    if((window.innerWidth / window.innerHeight) < aspectRatio) {
         camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
         camera[indexCamera].updateProjectionMatrix();
         camera[indexCamera].lookAt(scene.position);
@@ -166,7 +166,7 @@ function getCartesianCoords(pos) {
 // since our spaceship travels with a constant angular speed 
 // follows that:
 // the speed units are: radians / second 
-// currentAngle  = radians / second * second
+// currentAngle  = radians / second  * second
 function moveForward() {
     'use strict';
 
@@ -362,7 +362,6 @@ function update() {
         }
     }
 
-    render();
 }
 
 function init() {
@@ -407,5 +406,6 @@ function animate() {
     camera[2].update();
 
     update();
+    render();
     requestAnimationFrame(animate);
 }
