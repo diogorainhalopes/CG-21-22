@@ -135,12 +135,11 @@ function onResize(){
     'use strict';
 
     aspectRatio = window.innerWidth / window.innerHeight;
-
+    
     camera[0].aspect = window.innerWidth / window.innerHeight;
     camera[0].updateProjectionMatrix();
     camera[2].aspect = window.innerWidth / window.innerHeight;
     camera[2].updateProjectionMatrix();
-
     camera[1].right = viewSize * aspectRatio / 2;
     camera[1].left = -camera[1].right;
     camera[1].top = viewSize / 2;
@@ -236,6 +235,16 @@ function switchCamera() {
 
 function turnSpot(spotLight) {
     spotLight.switch();
+}
+
+function switchShadows() {
+    palanque.traverse(function (node) {
+        if (node instanceof THREE.Object3D) {
+            palanque.currentMat = Math.abs(palanque.currentMat -1);
+            node.material = palanque.mats[Math.abs(this.currentMat)]
+            //node.material.needsUpdate = true;
+        }
+    });
 }
 
 
@@ -351,10 +360,6 @@ function onKeyUp(e) {
         case 89:
             phase3Rot = false;
             break;
-        case 97: // a 
-        case 65:
-            shading = false;
-            break;
         case 115: // s
         case 83:
             lightingCalculation = false;
@@ -411,7 +416,7 @@ function init() {
     
     createScene();
     camera[0] = createCameraP(45, 45, 45);
-    camera[1] = createCameraO(45,15,0);
+    camera[1] = createCameraP(45,15,0);
     camera[2] = createCameraP(0,45,0);
     camera[3] = new THREE.StereoCamera();
 
@@ -451,6 +456,7 @@ function animate() {
     if(spotlight1) {turnSpot(spot1); spotlight1=false;}
     if(spotlight2) {turnSpot(spot2); spotlight2=false;}
     if(spotlight3) {turnSpot(spot3); spotlight3=false;}
+    if(shading) { switchShadows(); shading = false;};
 
     update();
     if(renderer.xr.getSession()) {

@@ -28,7 +28,11 @@ class Entity extends THREE.Object3D {
         this.rotateY(angle);
 
     }
-        
+
+
+   
+
+    
 }
 
 
@@ -36,9 +40,13 @@ class Entity extends THREE.Object3D {
 class Palanque extends Entity {
     constructor() {
         super();
+        this.currentMat = 0;
+        this.mats = [
+            new THREE.MeshPhongMaterial({color: "lightblue"}),
+            new THREE.MeshLambertMaterial({color: "pink"})
+        ];
         this.assemble();
         this.position.set(0, 7.5, 0);
-        //this.translateY(FLOOR_HEIGHT);
 
     }
 
@@ -57,9 +65,9 @@ class Palanque extends Entity {
     }
 
     addLeg(x, y, z) {
-         
+
         const geometry = new THREE.CylinderGeometry(4, 4, 15, 32, 1);
-        const material = new THREE.MeshPhongMaterial({color: "rgb(153, 255, 204)"});
+        var material = this.mats[this.currentMat];
         
         var leg = new THREE.Mesh(geometry,material);
         leg.position.set(x, y, z);
@@ -71,7 +79,8 @@ class Palanque extends Entity {
 
     addStep(x, y, z) {
         const geometry = new THREE.BoxGeometry(6, 1, 35);
-        const material = new THREE.MeshPhongMaterial({color: "rgb(204, 204, 255)"});
+
+        var material = this.mats[this.currentMat];        
         
         var step = new THREE.Mesh(geometry,material);
         step.position.set(x, y, z);
@@ -83,8 +92,7 @@ class Palanque extends Entity {
 
     addBase(x, y, z) {
         const geometry = new THREE.BoxGeometry(30, 2, 35);
-        const material = new THREE.MeshPhongMaterial({color: "lightgrey"});
-        
+        var material = this.mats[this.currentMat];        
         var base = new THREE.Mesh(geometry,material);
         base.position.set(x, y, z);
         base.castShadow = true;
@@ -96,7 +104,7 @@ class Palanque extends Entity {
     addSupport(x, y, z) {
         const path = new CustomSinCurve( 7 );
         const geometry = new THREE.TubeGeometry( path, 45, 1.5, 34, false );
-        const material = new THREE.MeshPhongMaterial( { color: "rgb(255, 230, 230)" } );
+        var material = this.mats[this.currentMat];
         var support = new THREE.Mesh(geometry,material);
         support.position.set(x, y, z);
         support.castShadow = true;
@@ -106,8 +114,7 @@ class Palanque extends Entity {
     }
     addWall(x, y, z) {
         const geometry = new THREE.BoxGeometry(1, 30, 35);
-        const material = new THREE.MeshPhongMaterial({color: "lightgrey"});
-        
+        var material = this.mats[this.currentMat];        
         var wall = new THREE.Mesh(geometry,material);
         wall.position.set(x, y, z);
         wall.castShadow = true;
@@ -115,15 +122,28 @@ class Palanque extends Entity {
         this.add(wall);      
 
     }
+    changeMaterial () {
+        this.children.forEach(function (element) {
+            if (element  instanceof THREE.Mesh) {
+                this.currentMat = Math.abs(this.currentMat -1);
+                element.material = this.mats[Math.abs(this.currentMat)]
+                
+            }
+        });
+    }  
 
 }
 
 class Floor extends Entity {
     constructor() {
         super();
-        
+        this.currentMat = 0;
+        this.mats = [
+            new THREE.MeshPhongMaterial({color: "red"}),
+            new THREE.MeshLambertMaterial({color: "blue"})
+        ];
         const geometry = new THREE.PlaneGeometry(500, 500,32 );
-        const material = new THREE.MeshPhongMaterial({color: "rgb(51, 102, 204)"});
+        var material = this.mats[this.currentMat];  
         var floor = new THREE.Mesh(geometry,material);
         floor.rotation.x = - Math.PI / 2;
         floor.receiveShadow = true;
@@ -138,14 +158,7 @@ class Floor extends Entity {
 class Phase1 extends Entity {
     constructor() {
         super();
-        this.assemble();
-        this.position.set(0, 15, 6);
-        this.scale.set(2, 2, 2);
-
-    }
-
-    assemble() {
-        
+        this.currentMat = 0;
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
             0.0, 2.0,  0.0,
@@ -157,14 +170,29 @@ class Phase1 extends Entity {
             0.0,  0.0,  0.0,
         ] );
 
-        // itemSize = 3 because there are 3 values (components) per vertex
-        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        geometry.computeVertexNormals()
-        var material = new THREE.MeshPhongMaterial( { color: "white" , side : THREE.DoubleSide} );
+        var geometry = new THREE.BufferGeometry();
+        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
+        geometry.computeVertexNormals();
+        
+        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( 0.3, 0.3 );
+        this.mats = [
+            new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
+            new THREE.MeshLambertMaterial({map: texture, side : THREE.DoubleSide})
+        ];
+        var material = this.mats[this.currentMat];
+        material.needsUpdate = true;
         var phase1 = new THREE.Mesh( geometry, material );
         phase1.castShadow = true;
         phase1.receiveShadow = true;
+
         this.add(phase1);
+
+        this.position.set(0, 15, 6);
+        this.scale.set(2, 2, 2);
 
     }
 
@@ -174,13 +202,7 @@ class Phase1 extends Entity {
 class Phase2 extends Entity {
     constructor() {
         super();
-        this.assemble();
-        this.position.set(0, 15, 0);
-        this.scale.set(2, 2, 2);
-
-    }
-
-    assemble() {
+        this.currentMat = 0;
         
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
@@ -219,14 +241,29 @@ class Phase2 extends Entity {
            
         ] );
 
-        // itemSize = 3 because there are 3 values (components) per vertex
-        geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
-        var material = new THREE.MeshPhongMaterial({color: "white" , side : THREE.DoubleSide});
+
+        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( 0.3, 0.3 );
+        this.mats = [
+            new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
+            new THREE.MeshLambertMaterial({map: texture, side : THREE.DoubleSide})
+        ];
+
+        var material = this.mats[this.currentMat];
+        material.needsUpdate = true;
+
         var phase2 = new THREE.Mesh( geometry, material );
         phase2.castShadow = true;
         phase2.receiveShadow = true;
+
         this.add(phase2);
+        this.position.set(0, 15, 0);
+        this.scale.set(2, 2, 2);
 
     }
 
@@ -236,14 +273,8 @@ class Phase2 extends Entity {
 class Phase3 extends Entity {
     constructor() {
         super();
-        this.assemble();
-        this.position.set(0, 15, -6);
-        this.scale.set(2, 2, 2);
+        this.currentMat = 0;
 
-    }
-
-    assemble() {
-        
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
             // neck
@@ -338,29 +369,36 @@ class Phase3 extends Entity {
             
         ] );
 
-        var uvs = new Float32Array([
-            0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-
-            1.0, 1.0,
-            0.0, 1.0,
-            0.0, 0.0
-        ])
-
-
-        // itemSize = 3 because there are 3 values (components) per vertex
         geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
-       // geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
         
-        var material = new THREE.MeshPhongMaterial( { color: "white",
-                                                    //map: new THREE.TextureLoader().load("azulejos.jpg"),
-                                                    side : THREE.DoubleSide} );
+        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
+        
+        this.mats = [
+            new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
+            new THREE.MeshLambertMaterial({map: texture, side : THREE.DoubleSide})
+        ];
+
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( 0.3, 0.3 );
+        
+        var material = this.mats[this.currentMat];
+        material.needsUpdate = true;
         var phase3 = new THREE.Mesh( geometry, material );
         phase3.castShadow = true;
         phase3.receiveShadow = true;
+
         this.add(phase3);
+        this.position.set(0, 15, -6);
+        this.scale.set(2, 2, 2);
+
+    }
+
+    assemble() {
+        
+        
         
     }
 
@@ -370,6 +408,11 @@ class Phase3 extends Entity {
 class Lamp extends Entity {
     constructor(x, y, z/*, target, intensity, distance*/) {
         super();
+        this.currentMat = 0;
+        this.mats = [
+            new THREE.MeshPhongMaterial({color: "yellow"}),
+            new THREE.MeshLambertMaterial({color: "orange"})
+        ];
         this.assemble();
         //this.light(x, y, z, target, intensity, distance);
         this.position.set(x, y+0.3, z);
@@ -385,7 +428,7 @@ class Lamp extends Entity {
 
     addCone(x, y, z) {
         const geometry = new THREE.ConeGeometry(5, 20, 32);
-        const material = new THREE.MeshPhongMaterial({color: "black"});
+        var material = this.mats[this.currentMat];
         
         var cone = new THREE.Mesh(geometry,material);
         cone.position.set(x, y, z);
@@ -399,7 +442,7 @@ class Lamp extends Entity {
 
     addSphere(x, y, z) {
         const geometry = new THREE.SphereGeometry( 4.5, 32, 16 );
-        const material = new THREE.MeshPhongMaterial({color: "yellow"});
+        var material = this.mats[this.currentMat];
         
         var ball = new THREE.Mesh(geometry,material);
         ball.position.set(x, y, z);
