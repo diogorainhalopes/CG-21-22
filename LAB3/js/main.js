@@ -238,13 +238,28 @@ function turnSpot(spotLight) {
 }
 
 function switchShadows() {
-    palanque.traverse(function (node) {
-        if (node instanceof THREE.Object3D) {
-            palanque.currentMat = Math.abs(palanque.currentMat -1);
-            node.material = palanque.mats[Math.abs(this.currentMat)]
-            //node.material.needsUpdate = true;
+
+    /* for(i = 0; i < group.children.length-3; i++) {
+        for(j = 0; j < group.children[i].children.length; j++) {
+            if (group.children[i].currentMat === 0) {
+                group.children[i].children[j].material = group.children[i].mats[1];
+            }
+            if (group.children[i].currentMat === 1) {
+                group.children[i].children[j].material = group.children[i].mats[0];
+            }
+            
         }
-    });
+        group.children[i].currentMat = Math.abs(group.children[i].currentMat -1);
+    } */
+    palanque.changeMaterial();
+    floor.changeMaterial();
+    phase1.changeMaterial();
+    phase2.changeMaterial();
+    phase3.changeMaterial();
+    spot1.lamp.changeMaterial();
+    spot2.lamp.changeMaterial();
+    spot3.lamp.changeMaterial();
+
 }
 
 
