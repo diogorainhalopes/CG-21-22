@@ -202,3 +202,4 @@ class VRButton {
 
 }
 
+VRButton.registerSessionGrantedListener();
