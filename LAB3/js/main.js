@@ -1,8 +1,6 @@
 /*global THREE, requestAnimationFrame, console*/
-
-var scene, render;
+var scenes = [], currentScene = 0, renderer;
 var camera = [] , indexCamera = 0;
-var scene, renderer;
 var aspectRatio;
 var viewSize = 60;
 
@@ -39,13 +37,15 @@ var floor;
 var phase1, phase2, phase3;
 var spot1, spot2, spot3;
 
+var pause = false;
+
 function createScene() {
 
     'use strict';
-    scene = new THREE.Scene();
+    scenes.push(new THREE.Scene);
     const axesHelper = new THREE.AxesHelper(1000);   
-    scene.add(axesHelper);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+    scenes[currentScene].add(axesHelper);
+    scenes[currentScene].add(new THREE.AmbientLight(0xffffff, 0.3));
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
     directLight.position.set(50, 50, -50);
@@ -72,7 +72,7 @@ function createScene() {
     group.add(phase3);
     group.add(spot1, spot2, spot3);
     //group.scale.set(0.18, 0.18, 0.18);
-    scene.add(group);
+    scenes[currentScene].add(group);
     
     directLight.shadow.camera.top += 40;
     directLight.shadow.camera.bottom -= 40;
@@ -85,7 +85,7 @@ function createScene() {
 
     dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
     
-    scene.add(directLight, dlHelper, dlHelper2);
+    scenes[currentScene].add(directLight, dlHelper, dlHelper2);
 
 
     vrgroup = new THREE.Group();
@@ -100,7 +100,7 @@ function createCameraP(x,y,z) {
                                          1,
                                          1000);
     camera.position.set(x,y,z);
-    camera.lookAt(scene.position);
+    camera.lookAt(scenes[currentScene].position);
     return camera;
 
 }
@@ -171,8 +171,7 @@ function onResize(){
 
 function pauseGame() {
 
-    // TODO
-
+    
 }
 
 
@@ -181,7 +180,7 @@ function resizePerspective() {
     if((window.innerWidth / window.innerHeight) < ratio) {
         camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
         camera[indexCamera].updateProjectionMatrix();
-        camera[indexCamera].lookAt(scene.position);
+        camera[indexCamera].lookAt(scenes[currentScene].position);
     }
 }
 
@@ -229,7 +228,7 @@ function switchCamera() {
 
     }
     else {
-        camera[indexCamera].lookAt(scene.position);
+        camera[indexCamera].lookAt(scenes[currentScene].position);
     }
 }
 
@@ -384,12 +383,12 @@ function onKeyUp(e) {
 
 function render() {
     'use strict';
-    renderer.render(scene, camera[indexCamera]);
+    renderer.render(scenes[currentScene], camera[indexCamera]);
 }
 
 function renderVR() {
     'use strict';
-    renderer.render(scene, camera[indexCamera]);
+    renderer.render(scenes[currentScene], camera[indexCamera]);
     camera[indexCamera].updateWorldMatrix();
     camera[3].update(camera[indexCamera]);
     const size = new THREE.Vector2();
@@ -399,11 +398,11 @@ function renderVR() {
 
     renderer.setScissor(0, 0, size.width / 2, size.height);
     renderer.setViewport(0, 0, size.width / 2, size.height);
-    renderer.render(scene, camera[3].cameraL);
+    renderer.render(scenes[currentScene], camera[3].cameraL);
 
     renderer.setScissor(size.width / 2, 0, size.width / 2, size.height);
     renderer.setViewport(size.width / 2, 0, size.width / 2, size.height);
-    renderer.render(scene, camera[3].cameraR);
+    renderer.render(scenes[currentScene], camera[3].cameraR);
 
     renderer.setScissorTest(false);
 }
@@ -445,12 +444,12 @@ function init() {
     window.addEventListener("resize", onResize);
 
     renderer.xr.addEventListener('sessionstart', function () {
-        scene.add(vrgroup);
-        camera[indexCamera].lookAt(scene.position)
+        scenes[currentScene].add(vrgroup);
+        camera[indexCamera].lookAt(scenes[currentScene].position)
         vrgroup.add(camera[indexCamera]);
     });
     renderer.xr.addEventListener('sessionend', function () {
-        scene.remove(vrgroup);
+        scenes[currentScene].remove(vrgroup);
         vrgroup.remove(camera[indexCamera]);
     });
 }
