@@ -288,7 +288,7 @@ function rotatePhase1() {
         phase1.rotateItself(deltaTime*2);
     }
     else {
-        phase1.rotateItself(-deltaTime*2);;
+        phase1.rotateItself(-deltaTime*2);
     }
 }
 
@@ -299,7 +299,7 @@ function rotatePhase2() {
         phase2.rotateItself(deltaTime*2);
     }
     else {
-        phase2.rotateItself(-deltaTime*2);;
+        phase2.rotateItself(-deltaTime*2);
     }
 }
 
@@ -310,7 +310,7 @@ function rotatePhase3() {
         phase3.rotateItself(deltaTime*2);
     }
     else {
-        phase3.rotateItself(-deltaTime*2);;
+        phase3.rotateItself(-deltaTime*2);
     }
 }
 
