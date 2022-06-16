@@ -31,6 +31,30 @@ class Entity extends THREE.Object3D {
         this.rotateY(angle);
 
     }
+
+    changeMaterial () {
+
+        var j = 0;
+        for(j ; j < this.children.length; j++) {
+            if (this.currentMat === 0) {
+                this.children[j].material = this.mats[1];
+            }
+            if (this.currentMat === 1) {
+                this.children[j].material = this.mats[0];
+            }
+            this.children[j].material.needsUpdate = true;
+        }
+        this.currentMat = Math.abs(this.currentMat -1);
+    }
+
+    lightingCalculationOff() {
+
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
         
 }
 
@@ -129,31 +153,6 @@ class Palanque extends Entity {
 
     }
 
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-    
-     lightingCalculationOff() {
-
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
-    }
-
 }
 
 
@@ -176,30 +175,6 @@ class Floor extends Entity {
         this.add(floor);
         //this.position.set(0, 0, 0);
 
-    }
-
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-     lightingCalculationOff() {
-       
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
     }
 
 }
@@ -251,30 +226,6 @@ class Phase1 extends Entity {
         this.position.set(0, 15, 6);
         this.scale.set(2, 2, 2);
 
-    }
-
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-     lightingCalculationOff() {
-
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
     }
 
 }
@@ -354,30 +305,6 @@ class Phase2 extends Entity {
         this.position.set(0, 15, 0);
         this.scale.set(2, 2, 2);
 
-    }
-
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-     lightingCalculationOff() {
-
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
     }
 
 }
@@ -515,30 +442,6 @@ class Phase3 extends Entity {
 
     }
 
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-     lightingCalculationOff() {
-
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
-    }
-
 }
 
 
@@ -593,30 +496,6 @@ class Lamp extends Entity {
         ball.scale.set(0.15, 0.15, 0.15);
         this.add(ball);
 
-    }
-
-    changeMaterial () {
-
-        var j = 0;
-        for(j ; j < this.children.length; j++) {
-            if (this.currentMat === 0) {
-                this.children[j].material = this.mats[1];
-            }
-            if (this.currentMat === 1) {
-                this.children[j].material = this.mats[0];
-            }
-            this.children[j].material.needsUpdate = true;
-        }
-        this.currentMat = Math.abs(this.currentMat -1);
-    }
-
-     lightingCalculationOff() {
-
-        var i = 0;
-        for(i ; i < this.children.length; i++) {
-            this.children[i].material = this.basicMaterial;
-            this.children[i].material.needsUpdate = true;
-        }
     }
     
 }
