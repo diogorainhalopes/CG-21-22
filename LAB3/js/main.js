@@ -3,7 +3,7 @@ var scenes = [], renderer;
 var camera = [] , indexCamera = 0;
 var entities = [];
 var aspectRatio;
-var viewSize = 60;
+var viewSize = 80;
 
 var clock, deltaScale;
 var deltaTime;
@@ -223,35 +223,62 @@ function createCameraO(x,y,z) {
 }
 
 
-// TODO
-// FIX !!
 function onResize(){
     'use strict';
 
-    // aspectRatio = window.innerWidth / window.innerHeight;
-    
-    // camera[0].aspect = window.innerWidth / window.innerHeight;
-    // camera[0].updateProjectionMatrix();
-    // camera[2].aspect = window.innerWidth / window.innerHeight;
-    // camera[2].updateProjectionMatrix();
-    // camera[1].right = viewSize * aspectRatio / 2;
-    // camera[1].left = -camera[1].right;
-    // camera[1].top = viewSize / 2;
-    // camera[1].bottom = -camera[1].top;
-    // camera[1].updateProjectionMatrix();
-
-
-    // renderer.setSize( window.innerWidth, window.innerHeight );
+    aspectRatio = window.innerWidth / window.innerHeight;
+    if(indexCamera = ALIGNED_CAM || pause) {
+        onResizeOrthographic();
+    } else {
+        onResizePerspective();
+    }
 
 }
 
+function onResizeOrthographic() {
 
-function resizePerspective() {
-    if((window.innerWidth / window.innerHeight) < ratio) {
-        camera[indexCamera].aspect = window.innerWidth / window.innerHeight;
-        camera[indexCamera].updateProjectionMatrix();
-        camera[indexCamera].lookAt(scenes[currentScene].position);
+    if(aspectRatio < 1) {
+
+        camera[ALIGNED_CAM].left = -viewSize;
+        camera[ALIGNED_CAM].right = viewSize;
+        camera[ALIGNED_CAM].top = viewSize / aspectRatio;
+        camera[ALIGNED_CAM].bottom = -viewSize / aspectRatio;
+        if(pause) {
+
+            camera[PAUSE_CAM].left = -viewSize;
+            camera[PAUSE_CAM].right = viewSize;
+            camera[PAUSE_CAM].top = viewSize / aspectRatio;
+            camera[PAUSE_CAM].bottom = -viewSize / aspectRatio;
+        }
+   } 
+   else {
+
+        camera[ALIGNED_CAM].left = - viewSize * aspectRatio;
+        camera[ALIGNED_CAM].right = viewSize * aspectRatio;
+        camera[ALIGNED_CAM].top = viewSize;
+        camera[ALIGNED_CAM].bottom = -viewSize;
+        if(pause) {
+
+            camera[PAUSE_CAM].left = - viewSize * aspectRatio;
+            camera[PAUSE_CAM].right = viewSize * aspectRatio;
+            camera[PAUSE_CAM].top = viewSize;
+            camera[PAUSE_CAM].bottom = -viewSize;
+        }
+   }
+   if(pause) {
+    camera[PAUSE_CAM].updateProjectionMatrix();
+   }
+   camera[ALIGNED_CAM].updateProjectionMatrix();
+
+}
+
+function onResizePerspective() {
+
+    if (window.innerHeight > 0 && window.innerWidth > 0) {
+        camera[SCENE_CAM].aspect = aspectRatio;
     }
+    camera[SCENE_CAM].updateProjectionMatrix();
+
 }
 
 
@@ -474,6 +501,7 @@ function render() {
 
 function renderVR() {
     'use strict';
+
     renderer.render(scenes[DEFAULT_SCENE], camera[indexCamera]);
     camera[indexCamera].updateWorldMatrix();
     camera[STEREO_CAM].update(camera[indexCamera]);
@@ -489,8 +517,8 @@ function renderVR() {
     renderer.setScissor(size.width / 2, 0, size.width / 2, size.height);
     renderer.setViewport(size.width / 2, 0, size.width / 2, size.height);
     renderer.render(scenes[DEFAULT_SCENE], camera[STEREO_CAM].cameraR);
-
     renderer.setScissorTest(false);
+
 }
 
 
@@ -566,7 +594,6 @@ function animate() {
     if(renderer.xr.getSession()) {
         renderVR();
         renderer.setAnimationLoop(render);
-
     }
     else{
         render();
