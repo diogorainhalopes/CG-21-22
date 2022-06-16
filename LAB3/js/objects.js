@@ -28,11 +28,7 @@ class Entity extends THREE.Object3D {
         this.rotateY(angle);
 
     }
-
-
-   
-
-    
+        
 }
 
 
@@ -187,12 +183,12 @@ class Phase1 extends Entity {
         ] );
 
         var geometry = new THREE.BufferGeometry();
-        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
-        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
         
-        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
-        const texture2 = new THREE.TextureLoader().load( "js/textures/birds2.jpg");
+        const texture = new THREE.TextureLoader().load("textures/birds.png" );
+        const texture2 = new THREE.TextureLoader().load("textures/birds2.jpg");
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set( 0.3, 0.3 );
@@ -278,8 +274,8 @@ class Phase2 extends Entity {
         geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
 
-        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
-        const texture2 = new THREE.TextureLoader().load( "js/textures/birds2.jpg");
+        const texture = new THREE.TextureLoader().load("textures/birds.png" );
+        const texture2 = new THREE.TextureLoader().load("textures/birds2.jpg");
 
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
@@ -422,12 +418,12 @@ class Phase3 extends Entity {
             
         ] );
 
-        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
-        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
         
-        const texture = new THREE.TextureLoader().load( "js/textures/birds.png" );
-        const texture2 = new THREE.TextureLoader().load( "js/textures/birds2.jpg");
+        const texture = new THREE.TextureLoader().load("textures/birds.png" );
+        const texture2 = new THREE.TextureLoader().load("textures/birds2.jpg");
 
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
@@ -507,7 +503,7 @@ class Lamp extends Entity {
     }
 
     addSphere(x, y, z) {
-        const geometry = new THREE.SphereGeometry( 4.5, 32, 16 );
+        const geometry = new THREE.SphereGeometry(4.5, 32, 16 );
         var material = this.mats[this.currentMat];
         
         var ball = new THREE.Mesh(geometry,material);
