@@ -171,6 +171,8 @@ function resetFlags() {
 
     reset = false;
     pause = false;
+    alignedAng = false;
+    sceneAng = true;
 
 }
 
