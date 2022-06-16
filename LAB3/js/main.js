@@ -1,14 +1,14 @@
 /*global THREE, requestAnimationFrame, console*/
-var scenes = [], currentScene = 0, renderer;
+var scenes = [], renderer;
 var camera = [] , indexCamera = 0;
 var aspectRatio;
 var viewSize = 60;
 
 var clock, deltaScale;
 var deltaTime;
-var topAng = false;
-var lateralAng = false;
-var defaultAng = false;
+
+var sceneAng = false;
+var alignedAng = false;
 
 var phase1Rot = false;
 var phase2Rot = false;
@@ -18,13 +18,10 @@ var phase1Dir = false;
 var phase2Dir = false;
 var phase3Dir = false;
 
-
 var directLight, dlHelper, dlHelper2;
-
 var globalLighting = false;
 var shading = false;
 var lightingCalculation = false;
-
 var spotlight1 = false;
 var spotlight2 = false;
 var spotlight3 = false;
@@ -38,6 +35,16 @@ var phase1, phase2, phase3;
 var spot1, spot2, spot3;
 
 var pause = false;
+
+const DEFAULT_SCENE = 0;
+const PAUSE_SCENE = 1;
+const VIEW_ALL_SCENE = 0;
+const VIEW_ALIGNED = 1;
+const STEREO_CAM = 2;
+const PAUSE_CAM = 3
+const PAUSED_IMG = "textures/pause.png";
+const PAUSED1_IMG = "textures/pause1.png";
+
 
 function createScene() {
 
@@ -93,6 +100,56 @@ function createScene() {
 }
 
 
+function createPauseScene() {
+    'use strict';
+
+    scenes.push(new THREE.Scene())
+    createPauseMessage();
+    camera.push(createCameraO(0,25,100));
+    scenes[PAUSE_SCENE].add(camera[PAUSE_CAM]);
+    camera[PAUSE_CAM].lookAt(scenes[PAUSE_SCENE].position);
+
+}
+
+
+function createPauseMessage() {
+    'use strict';
+
+    const geometry = new THREE.PlaneGeometry(64,23);
+    const texture = new THREE.TextureLoader().load("textures/pause1.png");
+    const material = new THREE.MeshBasicMaterial({ map: texture});
+    const quad = new THREE.Mesh(geometry, material);
+
+    quad.position.set(0,-10,-50);
+    scenes[PAUSE_SCENE].add(quad);
+
+}
+
+
+function createCamerasDefaultScene() {
+    'use strict';
+
+    camera.push(createCameraP(45, 45, 45));
+    camera.push(createCameraO(45,15,0));
+    camera.push(new THREE.StereoCamera());
+  
+}
+
+function locateCamera() {
+    'use strict';
+    
+    if(sceneAng) { indexCamera = VIEW_ALL_SCENE; }
+    if(alignedAng) { indexCamera = VIEW_ALIGNED; }
+
+}
+
+
+function resetState() {
+
+
+
+}
+
 function createCameraP(x,y,z) {
     'use strict';
     var camera = new THREE.PerspectiveCamera(70,
@@ -130,24 +187,25 @@ function createCameraS(x,y,z) {
     'use strict';
 }
 
-
+// TODO
+// FIX !!
 function onResize(){
     'use strict';
 
-    aspectRatio = window.innerWidth / window.innerHeight;
+    // aspectRatio = window.innerWidth / window.innerHeight;
     
-    camera[0].aspect = window.innerWidth / window.innerHeight;
-    camera[0].updateProjectionMatrix();
-    camera[2].aspect = window.innerWidth / window.innerHeight;
-    camera[2].updateProjectionMatrix();
-    camera[1].right = viewSize * aspectRatio / 2;
-    camera[1].left = -camera[1].right;
-    camera[1].top = viewSize / 2;
-    camera[1].bottom = -camera[1].top;
-    camera[1].updateProjectionMatrix();
+    // camera[0].aspect = window.innerWidth / window.innerHeight;
+    // camera[0].updateProjectionMatrix();
+    // camera[2].aspect = window.innerWidth / window.innerHeight;
+    // camera[2].updateProjectionMatrix();
+    // camera[1].right = viewSize * aspectRatio / 2;
+    // camera[1].left = -camera[1].right;
+    // camera[1].top = viewSize / 2;
+    // camera[1].bottom = -camera[1].top;
+    // camera[1].updateProjectionMatrix();
 
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    // renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
 
@@ -169,10 +227,7 @@ function onResize(){
     }
 } */
 
-function pauseGame() {
 
-    
-}
 
 
 
@@ -221,16 +276,22 @@ function turnGlobalLighting() {
 
 
 
-function switchCamera() {
+function switchCamera(position) {
     'use strict'
     if(indexCamera === 1) {
         camera[indexCamera].lookAt(0, 10, 0);
 
     }
+    else if(indexCamera == PAUSE_CAM) {
+        camera[indexCamera].lookAt(position);
+
+    }
     else {
-        camera[indexCamera].lookAt(scenes[currentScene].position);
+
+        camera[indexCamera].lookAt(scenes[DEFAULT_SCENE].position);
     }
 }
+
 
 function turnSpot(spotLight) {
     spotLight.switch();
@@ -267,16 +328,13 @@ function onKeyDown(e) {
     
     switch (e.keyCode) {
         case 49: // 1
-            defaultAng = true;
-            indexCamera = 0;
+            sceneAng = true;
             break;
         case 50: // 2
-            topAng = true;
-            indexCamera = 1;
+            alignedAng = true;
             break;
         case 51: // 3
-            lateralAng = true;
-            indexCamera = 2;
+            reset = !reset;
             break;
         case 113: // q
         case 81:
@@ -332,6 +390,10 @@ function onKeyDown(e) {
         case 67: 
             spotlight3 = true;
             break;
+        
+        case 32: // space bar
+            pause = !pause;
+            break;
 
     }
 
@@ -342,14 +404,14 @@ function onKeyUp(e) {
 
     switch (e.keyCode) {
         case 49: // 1
-            defaultAng = false;
+            sceneAng = false;
         break;
-            case 50: // 2
-            topAng = false;
+        case 50: // 2
+            alignedAng = false;    
             break;
-        case 51: // 3
-            lateralAng = false;
-            break;
+        // case 51: // 3
+        //     lateralAng = false;
+        //     break;
         case 113: // q
         case 81:
             phase1Rot = false;
@@ -383,14 +445,26 @@ function onKeyUp(e) {
 
 function render() {
     'use strict';
-    renderer.render(scenes[currentScene], camera[indexCamera]);
+
+    renderer.autoClear = false;
+    renderer.clear();
+    renderer.render(scenes[DEFAULT_SCENE],camera[indexCamera]);
+
+    if(pause) {
+
+        // freezes time
+        clock.stop()
+        renderer.clearDepth();
+        renderer.render(scenes[PAUSE_SCENE],camera[PAUSE_CAM]);
+    } 
+
 }
 
 function renderVR() {
     'use strict';
-    renderer.render(scenes[currentScene], camera[indexCamera]);
+    renderer.render(scenes[DEFAULT_SCENE], camera[indexCamera]);
     camera[indexCamera].updateWorldMatrix();
-    camera[3].update(camera[indexCamera]);
+    camera[STEREO_CAM].update(camera[indexCamera]);
     const size = new THREE.Vector2();
     renderer.getSize(size);
 
@@ -398,11 +472,11 @@ function renderVR() {
 
     renderer.setScissor(0, 0, size.width / 2, size.height);
     renderer.setViewport(0, 0, size.width / 2, size.height);
-    renderer.render(scenes[currentScene], camera[3].cameraL);
+    renderer.render(scenes[DEFAULT_SCENE], camera[STEREO_CAM].cameraL);
 
     renderer.setScissor(size.width / 2, 0, size.width / 2, size.height);
     renderer.setViewport(size.width / 2, 0, size.width / 2, size.height);
-    renderer.render(scenes[currentScene], camera[3].cameraR);
+    renderer.render(scenes[DEFAULT_SCENE], camera[STEREO_CAM].cameraR);
 
     renderer.setScissorTest(false);
 }
@@ -412,8 +486,8 @@ function update() {
 }
 
 function init() {
-
     'use strict';
+
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
@@ -428,11 +502,9 @@ function init() {
     clock = new THREE.Clock(true);
     deltaScale = 1;
     
-    createScene();
-    camera[0] = createCameraP(45, 45, 45);
-    camera[1] = createCameraP(45,15,0);
-    camera[2] = createCameraP(0,45,0);
-    camera[3] = new THREE.StereoCamera();
+    createScene(); 
+    createCamerasDefaultScene() 
+    createPauseScene();
 
 /*      ORBIT CONTROLS      */
     const controls = new THREE.OrbitControls(camera[indexCamera], renderer.domElement);
@@ -444,34 +516,41 @@ function init() {
     window.addEventListener("resize", onResize);
 
     renderer.xr.addEventListener('sessionstart', function () {
-        scenes[currentScene].add(vrgroup);
-        camera[indexCamera].lookAt(scenes[currentScene].position)
+        scenes[DEFAULT_SCENE].add(vrgroup);
+        camera[indexCamera].lookAt(scenes[DEFAULT_SCENE].position)
         vrgroup.add(camera[indexCamera]);
     });
     renderer.xr.addEventListener('sessionend', function () {
-        scenes[currentScene].remove(vrgroup);
+        scenes[DEFAULT_SCENE].remove(vrgroup);
         vrgroup.remove(camera[indexCamera]);
     });
 }
 
 function animate() {
-
     'use strict';
 
     deltaTime = clock.getDelta() * deltaScale;
 
-    if(topAng) { switchCamera(); };
-    if(lateralAng) { switchCamera(); };
-    if(defaultAng) { switchCamera(); };
-    if(phase1Rot) { rotatePhase1(); };
-    if(phase2Rot) { rotatePhase2(); };
-    if(phase3Rot) { rotatePhase3(); };
-    if(globalLighting) {turnGlobalLighting(); globalLighting=false;}
-    if(spotlight1) {turnSpot(spot1); spotlight1=false;}
-    if(spotlight2) {turnSpot(spot2); spotlight2=false;}
-    if(spotlight3) {turnSpot(spot3); spotlight3=false;}
-    if(shading) { switchShadows(); shading = false;};
+    locateCamera();
 
+    // game's not paused
+    if(!pause) {
+
+        if(phase1Rot) { rotatePhase1(); };
+        if(phase2Rot) { rotatePhase2(); };
+        if(phase3Rot) { rotatePhase3(); };
+
+    } 
+
+    if(sceneAng ||alignedAng ) { switchCamera(null); }
+    if(globalLighting) { turnGlobalLighting(); globalLighting=false; }
+    if(spotlight1) { turnSpot(spot1); spotlight1=false; }
+    if(spotlight2) { turnSpot(spot2); spotlight2=false; }
+    if(spotlight3) { turnSpot(spot3); spotlight3=false; }
+    if(shading) { switchShadows(); shading = false;}
+    if(pause) { if(reset) { resetState(); } }
+ 
+    
     update();
     if(renderer.xr.getSession()) {
         renderVR();
@@ -481,6 +560,7 @@ function animate() {
         render();
         requestAnimationFrame(animate);
     }
-    
+     
 }
+
 
