@@ -1,6 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 var scenes = [], renderer;
 var camera = [] , indexCamera = 0;
+var entities = [];
 var aspectRatio;
 var viewSize = 60;
 
@@ -35,11 +36,12 @@ var phase1, phase2, phase3;
 var spot1, spot2, spot3;
 
 var pause = false;
+var reset = false;
 
 const DEFAULT_SCENE = 0;
 const PAUSE_SCENE = 1;
-const VIEW_ALL_SCENE = 0;
-const VIEW_ALIGNED = 1;
+const SCENE_CAM = 0;
+const ALIGNED_CAM = 1;
 const STEREO_CAM = 2;
 const PAUSE_CAM = 3
 const PAUSED_IMG = "textures/pause.png";
@@ -47,12 +49,13 @@ const PAUSED1_IMG = "textures/pause1.png";
 
 
 function createScene() {
-
     'use strict';
+
     scenes.push(new THREE.Scene);
     const axesHelper = new THREE.AxesHelper(1000);   
-    scenes[currentScene].add(axesHelper);
-    scenes[currentScene].add(new THREE.AmbientLight(0xffffff, 0.3));
+    scenes[DEFAULT_SCENE].add(axesHelper);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scenes[DEFAULT_SCENE].add(ambientLight);
 
     directLight = new THREE.DirectionalLight(0xFFFFFF, 1);
     directLight.position.set(50, 50, -50);
@@ -79,7 +82,7 @@ function createScene() {
     group.add(phase3);
     group.add(spot1, spot2, spot3);
     //group.scale.set(0.18, 0.18, 0.18);
-    scenes[currentScene].add(group);
+    scenes[DEFAULT_SCENE].add(group);
     
     directLight.shadow.camera.top += 40;
     directLight.shadow.camera.bottom -= 40;
@@ -92,11 +95,20 @@ function createScene() {
 
     dlHelper2 = new THREE.CameraHelper(directLight.shadow.camera);
     
-    scenes[currentScene].add(directLight, dlHelper, dlHelper2);
+    scenes[DEFAULT_SCENE].add(directLight, dlHelper, dlHelper2);
 
 
     vrgroup = new THREE.Group();
     vrgroup.position.set(45, 45, 45);  // Set the initial VR Headset Position.
+
+    // save entities (useful for when later removing from the scene)
+    entities.push(group);
+    entities.push(directLight);
+    entities.push(dlHelper);
+    entities.push(dlHelper2);
+    entities.push(ambientLight)
+    entities.push(vrgroup);
+    
 }
 
 
@@ -135,20 +147,44 @@ function createCamerasDefaultScene() {
   
 }
 
+
 function locateCamera() {
     'use strict';
     
-    if(sceneAng) { indexCamera = VIEW_ALL_SCENE; }
-    if(alignedAng) { indexCamera = VIEW_ALIGNED; }
+    if(sceneAng) { indexCamera = SCENE_CAM; }
+    if(alignedAng) { indexCamera = ALIGNED_CAM; }
+
+}
+
+
+function cleanupState() {
+    'use strict';
+
+    for(let entity of entities) {
+        scenes[DEFAULT_SCENE].remove(entity);
+    }
+    entities = [];
+}
+
+function resetFlags() {
+    'use strict';
+
+    reset = false;
+    pause = false;
 
 }
 
 
 function resetState() {
+    'use strict';
 
-
-
+    cleanupState();
+    clock = new THREE.Clock(true);    
+    createScene(); 
+    createCamerasDefaultScene();
+    resetFlags();
 }
+
 
 function createCameraP(x,y,z) {
     'use strict';
@@ -157,7 +193,7 @@ function createCameraP(x,y,z) {
                                          1,
                                          1000);
     camera.position.set(x,y,z);
-    camera.lookAt(scenes[currentScene].position);
+    camera.lookAt(scenes[DEFAULT_SCENE].position);
     return camera;
 
 }
@@ -182,11 +218,6 @@ function createCameraO(x,y,z) {
     return camera;
 
 }
-
-function createCameraS(x,y,z) {
-    'use strict';
-}
-
 // TODO
 // FIX !!
 function onResize(){
@@ -209,6 +240,7 @@ function onResize(){
 
 }
 
+
 /* function onVRExit() {
     var str = event.display.isPresenting ? 'EXIT VR' : 'ENTER VR';
 	_device = event.display;
@@ -226,9 +258,6 @@ function onResize(){
 
     }
 } */
-
-
-
 
 
 function resizePerspective() {
@@ -250,6 +279,7 @@ function rotatePhase1() {
     }
 }
 
+
 function rotatePhase2() {
     'use strict'
     if(phase2Dir) {
@@ -259,6 +289,7 @@ function rotatePhase2() {
         phase2.rotateItself(-deltaTime*2);;
     }
 }
+
 
 function rotatePhase3() {
     'use strict'
@@ -270,10 +301,11 @@ function rotatePhase3() {
     }
 }
 
+
 function turnGlobalLighting() {
     directLight.visible = !directLight.visible;
-}
 
+}
 
 
 function switchCamera(position) {
@@ -295,7 +327,9 @@ function switchCamera(position) {
 
 function turnSpot(spotLight) {
     spotLight.switch();
+
 }
+
 
 function switchShadows() {
 
