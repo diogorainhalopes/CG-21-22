@@ -566,7 +566,7 @@ function animate() {
     if(lightingCalculation) { 
         if(shading) { switchShadows(); shading = false; } 
     } else {
-        switchLightingCalculation()
+        switchLightingCalculation();
     }
 
   
