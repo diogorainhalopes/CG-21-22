@@ -294,18 +294,13 @@ function turnGlobalLighting() {
 }
 
 
-function switchCamera(position) {
+function switchCamera() {
     'use strict'
     if(indexCamera === 1) {
         camera[indexCamera].lookAt(0, 10, 0);
 
     }
-    else if(indexCamera == PAUSE_CAM) {
-        camera[indexCamera].lookAt(position);
-
-    }
     else {
-
         camera[indexCamera].lookAt(scenes[DEFAULT_SCENE].position);
     }
 }
@@ -547,7 +542,6 @@ function animate() {
 
     locateCamera();
 
-    // game's not paused
     if(!pause) {
 
         if(phase1Rot) { rotatePhase1(); };
@@ -556,7 +550,7 @@ function animate() {
 
     } 
 
-    if(sceneAng ||alignedAng ) { switchCamera(null); }
+    if(sceneAng ||alignedAng ) { switchCamera(); }
     if(globalLighting) { turnGlobalLighting(); globalLighting=false; }
     if(spotlight1) { turnSpot(spot1); spotlight1=false; }
     if(spotlight2) { turnSpot(spot2); spotlight2=false; }
@@ -569,7 +563,6 @@ function animate() {
         switchLightingCalculation();
     }
 
-  
     if(renderer.xr.getSession()) {
         renderVR();
         renderer.setAnimationLoop(render);
