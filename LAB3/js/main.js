@@ -22,7 +22,7 @@ var phase3Dir = false;
 var directLight, dlHelper, dlHelper2;
 var globalLighting = false;
 var shading = false;
-var lightingCalculation = false;
+var lightingCalculation = true;
 var spotlight1 = false;
 var spotlight2 = false;
 var spotlight3 = false;
@@ -173,6 +173,7 @@ function resetFlags() {
     pause = false;
     alignedAng = false;
     sceneAng = true;
+    lightingCalculation = true;
 
 }
 
@@ -181,10 +182,10 @@ function resetState() {
     'use strict';
 
     cleanupState();
-    clock = new THREE.Clock(true);    
     createScene(); 
     createCamerasDefaultScene();
     resetFlags();
+    clock.start();
 }
 
 
@@ -220,6 +221,8 @@ function createCameraO(x,y,z) {
     return camera;
 
 }
+
+
 // TODO
 // FIX !!
 function onResize(){
@@ -241,25 +244,6 @@ function onResize(){
     // renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
-
-
-/* function onVRExit() {
-    var str = event.display.isPresenting ? 'EXIT VR' : 'ENTER VR';
-	_device = event.display;
-	if(event.display.isPresenting === false){
-		cameOut = true;
-		camera.position.z = 0;
-		camera.position.y = 0;
-		camera.position.x = 0;
-		camera.rotation.x = 0;
-		camera.rotation.y = 0;
-		camera.rotation.z = 0;
-		
-		camera.lookAt( scene.position );
-		renderer.setSize( window.innerWidth, window.innerHeight )
-
-    }
-} */
 
 
 function resizePerspective() {
@@ -335,18 +319,6 @@ function turnSpot(spotLight) {
 
 function switchShadows() {
 
-    /* for(i = 0; i < group.children.length-3; i++) {
-        for(j = 0; j < group.children[i].children.length; j++) {
-            if (group.children[i].currentMat === 0) {
-                group.children[i].children[j].material = group.children[i].mats[1];
-            }
-            if (group.children[i].currentMat === 1) {
-                group.children[i].children[j].material = group.children[i].mats[0];
-            }
-            
-        }
-        group.children[i].currentMat = Math.abs(group.children[i].currentMat -1);
-    } */
     palanque.changeMaterial();
     floor.changeMaterial();
     phase1.changeMaterial();
@@ -356,6 +328,22 @@ function switchShadows() {
     spot2.lamp.changeMaterial();
     spot3.lamp.changeMaterial();
 
+}
+
+function switchLightingCalculation() {
+
+    palanque.lightingCalculationOff();
+    floor.lightingCalculationOff();
+    phase1.lightingCalculationOff();
+    phase2.lightingCalculationOff();
+    phase3.lightingCalculationOff();
+    spot1.lamp.lightingCalculationOff();
+    spot2.lamp.lightingCalculationOff()
+    spot3.lamp.lightingCalculationOff();  
+    spot1.switch();
+    spot2.switch();
+    spot3.switch();
+ 
 }
 
 
@@ -408,7 +396,7 @@ function onKeyDown(e) {
             break;
         case 115: // s
         case 83:
-            lightingCalculation = true;
+            lightingCalculation = !lightingCalculation;
             break;
         case 100: // d
         case 68:
@@ -445,9 +433,6 @@ function onKeyUp(e) {
         case 50: // 2
             alignedAng = false;    
             break;
-        // case 51: // 3
-        //     lateralAng = false;
-        //     break;
         case 113: // q
         case 81:
             phase1Rot = false;
@@ -471,11 +456,7 @@ function onKeyUp(e) {
         case 121: // y
         case 89:
             phase3Rot = false;
-            break;
-        case 115: // s
-        case 83:
-            lightingCalculation = false;
-            break;    
+            break; 
     }
 }
 
@@ -517,9 +498,6 @@ function renderVR() {
     renderer.setScissorTest(false);
 }
 
-function update() {
-
-}
 
 function init() {
     'use strict';
@@ -583,14 +561,19 @@ function animate() {
     if(spotlight1) { turnSpot(spot1); spotlight1=false; }
     if(spotlight2) { turnSpot(spot2); spotlight2=false; }
     if(spotlight3) { turnSpot(spot3); spotlight3=false; }
-    if(shading) { switchShadows(); shading = false;}
     if(pause) { if(reset) { resetState(); } }
- 
-    
-    update();
+
+    if(lightingCalculation) { 
+        if(shading) { switchShadows(); shading = false; } 
+    } else {
+        switchLightingCalculation()
+    }
+
+  
     if(renderer.xr.getSession()) {
         renderVR();
-        renderer.setAnimationLoop( render );
+        renderer.setAnimationLoop(render);
+
     }
     else{
         render();

@@ -2,20 +2,23 @@
 
 
 class CustomSinCurve extends THREE.Curve {
-	constructor( scale = 1 ) {
+
+	constructor(scale = 1) {
 		super();
 		this.scale = scale;
 
 	}
-	getPoint( t, optionalTarget = new THREE.Vector3() ) {
+
+	getPoint(t, optionalTarget = new THREE.Vector3()) {
 		const tx = t * 3 - 1.5;
 		const ty = Math.sin( 2 * Math.PI * t );
 		const tz = 0;
-		return optionalTarget.set( tx, ty, tz ).multiplyScalar( this.scale );
+		return optionalTarget.set(tx,ty,tz).multiplyScalar(this.scale);
 
 	}
 
 }
+
 
 class Entity extends THREE.Object3D {
 
@@ -32,21 +35,23 @@ class Entity extends THREE.Object3D {
 }
 
 
-
 class Palanque extends Entity {
+
     constructor() {
         super();
         this.currentMat = 0;
         this.mats = [
-            new THREE.MeshPhongMaterial({color: "lightblue"}),
-            new THREE.MeshLambertMaterial({color: "pink"})
+            new THREE.MeshPhongMaterial({color:"lightblue"}),
+            new THREE.MeshLambertMaterial({color:"pink"})
         ];
+        this.basicMaterial = new THREE.MeshBasicMaterial( {color:0xad9675});
         this.assemble();
         this.position.set(0, 7.5, 0);
 
     }
 
     assemble() {
+
         this.addLeg(15, 0, 15);
         this.addLeg(15, 0, -15);
         this.addLeg(-15, 0, 15);
@@ -74,6 +79,7 @@ class Palanque extends Entity {
     }
 
     addStep(x, y, z) {
+
         const geometry = new THREE.BoxGeometry(6, 1, 35);
 
         var material = this.mats[this.currentMat];        
@@ -87,6 +93,7 @@ class Palanque extends Entity {
     }
 
     addBase(x, y, z) {
+
         const geometry = new THREE.BoxGeometry(30, 2, 35);
         var material = this.mats[this.currentMat];        
         var base = new THREE.Mesh(geometry,material);
@@ -98,6 +105,7 @@ class Palanque extends Entity {
     }
 
     addSupport(x, y, z) {
+
         const path = new CustomSinCurve( 7 );
         const geometry = new THREE.TubeGeometry( path, 45, 1.5, 34, false );
         var material = this.mats[this.currentMat];
@@ -108,7 +116,9 @@ class Palanque extends Entity {
         this.add(support);
 
     }
+
     addWall(x, y, z) {
+
         const geometry = new THREE.BoxGeometry(1, 30, 35);
         var material = this.mats[this.currentMat];        
         var wall = new THREE.Mesh(geometry,material);
@@ -118,7 +128,9 @@ class Palanque extends Entity {
         this.add(wall);      
 
     }
+
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -131,16 +143,31 @@ class Palanque extends Entity {
         }
         this.currentMat = Math.abs(this.currentMat -1);
     }
+
+    
+     lightingCalculationOff() {
+
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+
 }
 
+
 class Floor extends Entity {
+
     constructor() {
         super();
-        this.currentMat = 0;
+        this.currentMat = 1;
         this.mats = [
-            new THREE.MeshPhongMaterial({color: "red"}),
-            new THREE.MeshLambertMaterial({color: "blue"})
+            // new new THREE.MeshBasicMaterial( {color:"lightsalmon3"}),
+            new THREE.MeshPhongMaterial({color:"red"}),
+            new THREE.MeshLambertMaterial({color:"blue"})
         ];
+        this.basicMaterial = new THREE.MeshBasicMaterial( {color:0xe5914f});
         const geometry = new THREE.PlaneGeometry(500, 500,32 );
         var material = this.mats[this.currentMat];  
         var floor = new THREE.Mesh(geometry,material);
@@ -150,7 +177,9 @@ class Floor extends Entity {
         //this.position.set(0, 0, 0);
 
     }
+
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -163,14 +192,25 @@ class Floor extends Entity {
         }
         this.currentMat = Math.abs(this.currentMat -1);
     }
+
+     lightingCalculationOff() {
+       
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+
 }
 
 
 
 class Phase1 extends Entity {
+
     constructor() {
         super();
-        this.currentMat = 0;
+        this.currentMat = 1;
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
             0.0, 2.0,  0.0,
@@ -199,6 +239,7 @@ class Phase1 extends Entity {
             new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
             new THREE.MeshLambertMaterial({map: texture2, side : THREE.DoubleSide})
         ];
+        this.basicMaterial = new THREE.MeshBasicMaterial( {color:0xd5f2ef, side: THREE.DoubleSide});
         var material = this.mats[this.currentMat];
         material.needsUpdate = true;
         var phase1 = new THREE.Mesh( geometry, material );
@@ -211,7 +252,9 @@ class Phase1 extends Entity {
         this.scale.set(2, 2, 2);
 
     }
+
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -225,13 +268,23 @@ class Phase1 extends Entity {
         this.currentMat = Math.abs(this.currentMat -1);
     }
 
+     lightingCalculationOff() {
+
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+
 }
 
 
 class Phase2 extends Entity {
+
     constructor() {
         super();
-        this.currentMat = 0;
+        this.currentMat = 1;
         
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
@@ -270,8 +323,8 @@ class Phase2 extends Entity {
            
         ] );
 
-        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices,3));
-        geometry.setAttribute( 'uv', new THREE.BufferAttribute( vertices, 3 ));
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices,3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute( vertices, 3 ));
         geometry.computeVertexNormals();
 
         const texture = new THREE.TextureLoader().load("textures/birds.png" );
@@ -289,7 +342,7 @@ class Phase2 extends Entity {
             new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
             new THREE.MeshLambertMaterial({map: texture2, side : THREE.DoubleSide})
         ];
-
+        this.basicMaterial =  new THREE.MeshBasicMaterial( {color:0xd5f2ef , side: THREE.DoubleSide}); 
         var material = this.mats[this.currentMat];
         material.needsUpdate = true;
 
@@ -302,7 +355,9 @@ class Phase2 extends Entity {
         this.scale.set(2, 2, 2);
 
     }
+
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -316,13 +371,23 @@ class Phase2 extends Entity {
         this.currentMat = Math.abs(this.currentMat -1);
     }
 
+     lightingCalculationOff() {
+
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+
 }
 
 
 class Phase3 extends Entity {
+
     constructor() {
         super();
-        this.currentMat = 0;
+        this.currentMat = 1;
 
         var geometry = new THREE.BufferGeometry();
         var vertices = new Float32Array( [
@@ -437,7 +502,7 @@ class Phase3 extends Entity {
             new THREE.MeshPhongMaterial({map: texture, side : THREE.DoubleSide}),
             new THREE.MeshLambertMaterial({map: texture2, side : THREE.DoubleSide})
         ];
-        
+        this.basicMaterial = new THREE.MeshBasicMaterial( {color:0xd5f2ef, side: THREE.DoubleSide});
         var material = this.mats[this.currentMat];
         material.needsUpdate = true;
         var phase3 = new THREE.Mesh( geometry, material );
@@ -451,6 +516,7 @@ class Phase3 extends Entity {
     }
 
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -464,17 +530,28 @@ class Phase3 extends Entity {
         this.currentMat = Math.abs(this.currentMat -1);
     }
 
+     lightingCalculationOff() {
+
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+
 }
 
 
 class Lamp extends Entity {
+
     constructor(x, y, z/*, target, intensity, distance*/) {
         super();
-        this.currentMat = 0;
+        this.currentMat = 1;
         this.mats = [
-            new THREE.MeshPhongMaterial({color: "yellow"}),
-            new THREE.MeshLambertMaterial({color: "darkgreen"})
+            new THREE.MeshPhongMaterial({color:"yellow"}),
+            new THREE.MeshLambertMaterial({color:"darkgreen"})
         ];
+        this.basicMaterial = new THREE.MeshBasicMaterial( {color:0xd0a1ee});
         this.assemble();
         //this.light(x, y, z, target, intensity, distance);
         this.position.set(x, y+0.3, z);
@@ -482,6 +559,7 @@ class Lamp extends Entity {
     }
 
     assemble() {
+
         this.addCone(1.7, 0, 0);
         this.addSphere(0, 0, 0);
         this.rotateZ(-Math.PI/11);
@@ -489,6 +567,7 @@ class Lamp extends Entity {
     }
 
     addCone(x, y, z) {
+
         const geometry = new THREE.ConeGeometry(5, 20, 32);
         var material = this.mats[this.currentMat];
         
@@ -503,6 +582,7 @@ class Lamp extends Entity {
     }
 
     addSphere(x, y, z) {
+
         const geometry = new THREE.SphereGeometry(4.5, 32, 16 );
         var material = this.mats[this.currentMat];
         
@@ -514,7 +594,9 @@ class Lamp extends Entity {
         this.add(ball);
 
     }
+
     changeMaterial () {
+
         var j = 0;
         for(j ; j < this.children.length; j++) {
             if (this.currentMat === 0) {
@@ -528,8 +610,16 @@ class Lamp extends Entity {
         this.currentMat = Math.abs(this.currentMat -1);
     }
 
-}
+     lightingCalculationOff() {
 
+        var i = 0;
+        for(i ; i < this.children.length; i++) {
+            this.children[i].material = this.basicMaterial;
+            this.children[i].material.needsUpdate = true;
+        }
+    }
+    
+}
 
 
 class SpotLight extends Entity {
@@ -557,8 +647,10 @@ class SpotLight extends Entity {
     }
 
     switch() {
+
         this.light.visible = !this.light.visible;
 
     }
+
 }
 
