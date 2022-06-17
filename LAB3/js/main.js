@@ -593,7 +593,7 @@ function animate() {
 
     if(renderer.xr.getSession()) {
         renderVR();
-        renderer.setAnimationLoop(render);
+        renderer.setAnimationLoop(animate);
     }
     else{
         render();
